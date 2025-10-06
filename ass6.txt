@@ -1,0 +1,219 @@
+This will have log statement of assignment 6
+mysql> show dbs
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dbs' at line 1
+mysql> show databases;
++--------------------------+
+| Database                 |
++--------------------------+
+| information_schema       |
+| Banking                  |
+| Fines                    |
+| StudentDB                |
+| ass01                    |
+| ass5                     |
+| ass6                     |
+| circle_areas             |
+| db                       |
+| db1                      |
+| demo                     |
+| demo1                    |
+| employee                 |ql> show tables
+    -> ;
+Empty set (0.00 sec)
+
+mysql> -- Old Roll Call table
+mysql> CREATE TABLE O_RollCall (
+    ->     Student_ID   NUMBER PRIMARY KEY,
+    ->     Student_Name VARCHAR2(100),
+    ->     Attendance_Date DATE
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER PRIMARY KEY,
+    Student_Name VARCHAR2(100),
+    Attendance_Date DATE
+)' at line 2
+mysql> 
+mysql> -- New Roll Call table
+mysql> CREATE TABLE N_RollCall (
+    ->     Student_ID   NUMBER,
+    ->     Student_Name VARCHAR2(100),
+    ->     Attendance_Date DATE
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER,
+    Student_Name VARCHAR2(100),
+    Attendance_Date DATE
+)' at line 2
+mysql> 
+mysql> CREATE TABLE O_RollCall (
+    ->     Student_ID   NUMBER PRIMARY KEY,
+    ->     Student_Name VARCHAR2(100),
+    ->     Attendance_Date DATE
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER PRIMARY KEY,
+    Student_Name VARCHAR2(100),
+    Attendance_Date DATE
+)' at line 2
+mysql> 
+
+| employeedb               |
+| library_db               |
+| movie_nishant            |
+| movie_subqueries_nishant |
+| mysql                    |
+| new                      |
+| performance_schema       |
+| prac                     |
+| test                     |
+| user                     |
++--------------------------+
+23 rows in set (0.11 sec)
+
+mysql> use ass6
+Database changed
+mysql> show tables
+    -> ;
+Empty set (0.00 sec)
+
+mysql> -- Old Roll Call table
+mysql> CREATE TABLE O_RollCall (
+    ->     Student_ID   NUMBER PRIMARY KEY,
+    ->     Student_Name VARCHAR2(100),
+    ->     Attendance_Date DATE
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER PRIMARY KEY,
+    Student_Name VARCHAR2(100),
+    Attendance_Date DATE
+)' at line 2
+mysql> 
+mysql> -- New Roll Call table
+mysql> CREATE TABLE N_RollCall (
+    ->     Student_ID   NUMBER,
+    ->     Student_Name VARCHAR2(100),
+    ->     Attendance_Date DATE
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER,
+    Student_Name VARCHAR2(100),
+    Attendance_Date DATE
+)' at line 2
+mysql> 
+mysql> CREATE TABLE O_RollCall (
+    ->     Student_ID   NUMBER PRIMARY KEY,
+    ->     Student_Name VARCHAR2(100),
+    ->     Attendance_Date DATE
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER PRIMARY KEY,
+    Student_Name VARCHAR2(100),
+    Attendance_Date DATE
+)' at line 2
+mysql> ^C
+mysql> CREATE TABLE O_RollCall (
+    ->     Student_ID INT PRIMARY KEY,
+    ->     Student_Name VARCHAR(100),
+    ->     Attendance_Date DATE
+    -> );
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> 
+mysql> -- New Roll Call table
+mysql> CREATE TABLE N_RollCall (
+    ->     Student_ID INT,
+    ->     Student_Name VARCHAR(100),
+    ->     Attendance_Date DATE
+    -> );
+Query OK, 0 rows affected (0.27 sec)
+
+mysql> -- Sample data for N_RollCall
+mysql> INSERT INTO N_RollCall VALUES (101, 'Alice', '2025-09-01');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO N_RollCall VALUES (102, 'Bob', '2025-09-01');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO N_RollCall VALUES (103, 'Charlie', '2025-09-01');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> 
+mysql> -- Existing record in O_RollCall
+mysql> INSERT INTO O_RollCall VALUES (101, 'Alice', '2025-09-01');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> DELIMITER $$
+mysql> 
+mysql> CREATE PROCEDURE Merge_RollCall(IN p_date DATE)
+    -> BEGIN
+    ->     DECLARE done INT DEFAULT 0;
+    ->     DECLARE v_id INT;
+    ->     DECLARE v_name VARCHAR(100);
+    ->     DECLARE v_date DATE;
+    -> 
+    ->     -- Cursor to loop over new records
+    ->     DECLARE cur CURSOR FOR
+    ->         SELECT Student_ID, Student_Name, Attendance_Date
+    ->         FROM N_RollCall
+    ->         WHERE Attendance_Date = p_date;
+    -> 
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    -> 
+    ->     OPEN cur;
+    -> 
+    ->     read_loop: LOOP
+    ->         FETCH cur INTO v_id, v_name, v_date;
+    ->         IF done THEN
+    ->             LEAVE read_loop;
+    ->         END IF;
+    -> 
+    ->         -- Insert if not exists
+    ->         IF NOT EXISTS (
+    ->             SELECT 1 FROM O_RollCall
+    ->             WHERE Student_ID = v_id AND Attendance_Date = v_date
+    ->         ) THEN
+    ->             INSERT INTO O_RollCall (Student_ID, Student_Name, Attendance_Date)
+    ->             VALUES (v_id, v_name, v_date);
+    ->         END IF;
+    -> 
+    ->     END LOOP;
+    -> 
+    ->     CLOSE cur;
+    -> 
+    -> END$$
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> CALL Merge_RollCall('2025-09-01');
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> CALL Merge_RollCall('2025-09-01');
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT * FROM O_RollCall;
++------------+--------------+-----------------+
+| Student_ID | Student_Name | Attendance_Date |
++------------+--------------+-----------------+
+|        101 | Alice        | 2025-09-01      |
+|        102 | Bob          | 2025-09-01      |
+|        103 | Charlie      | 2025-09-01      |
++------------+--------------+-----------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO O_RollCall (Student_ID, Student_Name, Attendance_Date)
+    -> SELECT Student_ID, Student_Name, Attendance_Date
+    -> FROM N_RollCall n
+    -> WHERE NOT EXISTS (
+    ->     SELECT 1 FROM O_RollCall o
+    ->     WHERE o.Student_ID = n.Student_ID
+    ->       AND o.Attendance_Date = n.Attendance_Date
+    -> );
+Query OK, 0 rows affected (0.00 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM O_RollCall;
++------------+--------------+-----------------+
+| Student_ID | Student_Name | Attendance_Date |
++------------+--------------+-----------------+
+|        101 | Alice        | 2025-09-01      |
+|        102 | Bob          | 2025-09-01      |
+|        103 | Charlie      | 2025-09-01      |
++------------+--------------+-----------------+
+3 rows in set (0.00 sec)
+

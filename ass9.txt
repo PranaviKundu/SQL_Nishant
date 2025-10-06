@@ -1,0 +1,528 @@
+MongoDB shell version v3.6.3
+connecting to: mongodb://127.0.0.1:27017/school
+MongoDB server version: 3.6.3
+{
+	"_id" : ObjectId("68d62fc1a01809a862c508b3"),
+	"name" : "Alice Johnson",
+	"age" : 21,
+	"department" : "Computer Science",
+	"grades" : [
+		85,
+		90,
+		82
+	],
+	"active" : true
+}
+{
+	"_id" : ObjectId("68e34116a60a463f1999d576"),
+	"name" : "Alice",
+	"age" : 20,
+	"grade" : "A",
+	"subjects" : [
+		"Math",
+		"English"
+	],
+	"address" : {
+		"city" : "Mumbai",
+		"pin" : 400001
+	}
+}
+{
+	"_id" : ObjectId("68e3431c748052c0d20e9170"),
+	"name" : "Alice",
+	"age" : 20,
+	"grade" : "A",
+	"subjects" : [
+		"Math",
+		"English"
+	],
+	"address" : {
+		"city" : "Mumbai",
+		"pin" : 400001
+	}
+}
+{
+	"_id" : ObjectId("68e3431e748052c0d20e9172"),
+	"name" : "Charlie",
+	"age" : 19,
+	"grade" : "A+",
+	"subjects" : [
+		"Math"
+	],
+	"address" : {
+		"city" : "Mumbai",
+		"pin" : 400002
+	}
+}
+
+root@csl4-HP-280-G3-MT:/home/csl-4/Desktop/7339# cat ass9.txt
+MongoDB shell version v3.6.3
+connecting to: mongodb://127.0.0.1:27017/school
+MongoDB server version: 3.6.3
+{
+	"_id" : ObjectId("68d62fc1a01809a862c508b3"),
+	"name" : "Alice Johnson",
+	"age" : 21,
+	"department" : "Computer Science",
+	"grades" : [
+		85,
+		90,
+		82
+	],
+	"active" : true
+}
+{
+	"_id" : ObjectId("68e34116a60a463f1999d576"),
+	"name" : "Alice",
+	"age" : 20,
+	"grade" : "A",
+	"subjects" : [
+		"Math",
+		"English"
+	],
+	"address" : {
+		"city" : "Mumbai",
+		"pin" : 400001
+	}
+}
+{
+	"_id" : ObjectId("68e3411ea60a463f1999d577"),
+	"name" : "Bob",
+	"age" : 22,
+	"grade" : "B+",
+	"subjects" : [
+		"Science",
+		"History"
+	],
+	"address" : {
+		"city" : "Delhi",
+		"pin" : 110001
+	}
+}
+root@csl4-HP-280-G3-MT:/home/csl-4/Desktop/7339# mongo
+MongoDB shell version v3.6.3
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 3.6.3
+Server has startup warnings: 
+2025-10-06T08:57:48.416+0530 I STORAGE  [initandlisten] 
+2025-10-06T08:57:48.416+0530 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2025-10-06T08:57:48.416+0530 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2025-10-06T08:57:53.924+0530 I CONTROL  [initandlisten] 
+2025-10-06T08:57:53.924+0530 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2025-10-06T08:57:53.924+0530 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2025-10-06T08:57:53.924+0530 I CONTROL  [initandlisten] 
+> use school
+switched to db school
+> tee ass9.txt
+2025-10-06T09:46:23.693+0530 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:4
+> tee("ass9.txt")
+2025-10-06T09:46:37.191+0530 E QUERY    [thread1] ReferenceError: tee is not defined :
+@(shell):1:1
+> db.students.find().pretty()
+{
+	"_id" : ObjectId("68d62fc1a01809a862c508b3"),
+	"name" : "Alice Johnson",
+	"age" : 21,
+	"department" : "Computer Science",
+	"grades" : [
+		85,
+		90,
+		82
+	],
+	"active" : true
+}
+{
+	"_id" : ObjectId("68e34116a60a463f1999d576"),
+	"name" : "Alice",
+	"age" : 20,
+	"grade" : "A",
+	"subjects" : [
+		"Math",
+		"English"
+	],
+	"address" : {
+		"city" : "Mumbai",
+		"pin" : 400001
+	}
+}
+{
+	"_id" : ObjectId("68e3411ea60a463f1999d577"),
+	"name" : "Bob",
+	"age" : 22,
+	"grade" : "B+",
+	"subjects" : [
+		"Science",
+		"History"
+	],
+	"address" : {
+		"city" : "Delhi",
+		"pin" : 110001
+	}
+}
+> notee()
+2025-10-06T09:46:55.169+0530 E QUERY    [thread1] ReferenceError: notee is not defined :
+@(shell):1:1
+> note()
+2025-10-06T09:47:00.318+0530 E QUERY    [thread1] ReferenceError: note is not defined :
+@(shell):1:1
+> tee("ass9.txt")
+2025-10-06T09:47:07.101+0530 E QUERY    [thread1] ReferenceError: tee is not defined :
+@(shell):1:1
+> db.students.find().pretty()
+{
+	"_id" : ObjectId("68d62fc1a01809a862c508b3"),
+	"name" : "Alice Johnson",
+	"age" : 21,
+	"department" : "Computer Science",
+	"grades" : [
+		85,
+		90,
+		82
+	],
+	"active" : true
+}
+{
+	"_id" : ObjectId("68e34116a60a463f1999d576"),
+	"name" : "Alice",
+	"age" : 20,
+	"grade" : "A",
+	"subjects" : [
+		"Math",
+		"English"
+	],
+	"address" : {
+		"city" : "Mumbai",
+		"pin" : 400001
+	}
+}
+{
+	"_id" : ObjectId("68e3411ea60a463f1999d577"),
+	"name" : "Bob",
+	"age" : 22,
+	"grade" : "B+",
+	"subjects" : [
+		"Science",
+		"History"
+	],
+	"address" : {
+		"city" : "Delhi",
+		"pin" : 110001
+	}
+}
+> db.orders.aggregate([
+...   { $unwind: "$items" },
+...   {
+...     $group: {
+...       _id: "$items.productId",
+...       totalQuantity: { $sum: "$items.quantity" },
+...       totalRevenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } }
+...     }
+...   },
+...   { $sort: { totalRevenue: -1 } }
+... ]);
+> db.orders.aggregate([
+...   {
+...     $group: {
+...       _id: "$shippingAddress.city",
+...       totalOrders: { $sum: 1 }
+...     }
+...   },
+...   { $sort: { totalOrders: -1 } }
+... ]);
+> db.orders.aggregate([
+...   {
+...     $group: {
+...       _id: { $month: "$orderDate" },
+...       totalSales: {
+...         $sum: {
+...           $sum: {
+...             $map: {
+...               input: "$items",
+...               as: "item",
+...               in: { $multiply: ["$$item.quantity", "$$item.price"] }
+...             }
+...           }
+...         }
+...       }
+...     }
+...   },
+...   { $sort: { "_id": 1 } }
+... ]);
+> db.orders.aggregate([
+...   {
+...     $lookup: {
+...       from: "customers",
+...       localField: "customerId",
+...       foreignField: "customerId",
+...       as: "customerDetails"
+...     }
+...   },
+...   { $unwind: "$customerDetails" },
+...   {
+...     $project: {
+...       orderId: 1,
+...       customerName: "$customerDetails.name",
+...       status: 1,
+...       orderDate: 1
+...     }
+...   }
+... ]);
+> db.orders.createIndex({ orderDate: 1 });
+{
+	"createdCollectionAutomatically" : true,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+> db.orders.createIndex({ customerId: 1 });
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 3,
+	"ok" : 1
+}
+> db.orders.createIndex({ "shippingAddress.city": 1, status: 1 });
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 3,
+	"numIndexesAfter" : 4,
+	"ok" : 1
+}
+> db.orders.find({ customerId: "C1001" }).explain("executionStats");
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "school.orders",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"customerId" : {
+				"$eq" : "C1001"
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"customerId" : 1
+				},
+				"indexName" : "customerId_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"customerId" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"customerId" : [
+						"[\"C1001\", \"C1001\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 0,
+		"executionTimeMillis" : 0,
+		"totalKeysExamined" : 0,
+		"totalDocsExamined" : 0,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"nReturned" : 0,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 1,
+			"advanced" : 0,
+			"needTime" : 0,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 0,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 0,
+				"executionTimeMillisEstimate" : 0,
+				"works" : 1,
+				"advanced" : 0,
+				"needTime" : 0,
+				"needYield" : 0,
+				"saveState" : 0,
+				"restoreState" : 0,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"customerId" : 1
+				},
+				"indexName" : "customerId_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"customerId" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"customerId" : [
+						"[\"C1001\", \"C1001\"]"
+					]
+				},
+				"keysExamined" : 0,
+				"seeks" : 1,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "csl4-HP-280-G3-MT",
+		"port" : 27017,
+		"version" : "3.6.3",
+		"gitVersion" : "9586e557d54ef70f9ca4b43c26892cd55257e1a5"
+	},
+	"ok" : 1
+}
+> db.students.insertOne({
+...   name: "Alice",
+...   age: 20,
+...   grade: "A",
+...   subjects: ["Math", "English"],
+...   address: { city: "Mumbai", pin: 400001 }
+... })
+{
+	"acknowledged" : true,
+	"insertedId" : ObjectId("68e3431c748052c0d20e9170")
+}
+> db.students.insertMany([
+...   { name: "Bob", age: 22, grade: "B", subjects: ["Science", "History"], address: { city: "Delhi", pin: 110001 } },
+...   { name: "Charlie", age: 19, grade: "A", subjects: ["Math", "Physics"], address: { city: "Mumbai", pin: 400002 } }
+... ])
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("68e3431e748052c0d20e9171"),
+		ObjectId("68e3431e748052c0d20e9172")
+	]
+}
+> db.students.find()
+{ "_id" : ObjectId("68d62fc1a01809a862c508b3"), "name" : "Alice Johnson", "age" : 21, "department" : "Computer Science", "grades" : [ 85, 90, 82 ], "active" : true }
+{ "_id" : ObjectId("68e34116a60a463f1999d576"), "name" : "Alice", "age" : 20, "grade" : "A", "subjects" : [ "Math", "English" ], "address" : { "city" : "Mumbai", "pin" : 400001 } }
+{ "_id" : ObjectId("68e3411ea60a463f1999d577"), "name" : "Bob", "age" : 22, "grade" : "B+", "subjects" : [ "Science", "History" ], "address" : { "city" : "Delhi", "pin" : 110001 } }
+{ "_id" : ObjectId("68e3431c748052c0d20e9170"), "name" : "Alice", "age" : 20, "grade" : "A", "subjects" : [ "Math", "English" ], "address" : { "city" : "Mumbai", "pin" : 400001 } }
+{ "_id" : ObjectId("68e3431e748052c0d20e9171"), "name" : "Bob", "age" : 22, "grade" : "B", "subjects" : [ "Science", "History" ], "address" : { "city" : "Delhi", "pin" : 110001 } }
+{ "_id" : ObjectId("68e3431e748052c0d20e9172"), "name" : "Charlie", "age" : 19, "grade" : "A", "subjects" : [ "Math", "Physics" ], "address" : { "city" : "Mumbai", "pin" : 400002 } }
+> db.students.find({ "address.city": "Mumbai" })
+{ "_id" : ObjectId("68e34116a60a463f1999d576"), "name" : "Alice", "age" : 20, "grade" : "A", "subjects" : [ "Math", "English" ], "address" : { "city" : "Mumbai", "pin" : 400001 } }
+{ "_id" : ObjectId("68e3431c748052c0d20e9170"), "name" : "Alice", "age" : 20, "grade" : "A", "subjects" : [ "Math", "English" ], "address" : { "city" : "Mumbai", "pin" : 400001 } }
+{ "_id" : ObjectId("68e3431e748052c0d20e9172"), "name" : "Charlie", "age" : 19, "grade" : "A", "subjects" : [ "Math", "Physics" ], "address" : { "city" : "Mumbai", "pin" : 400002 } }
+> db.students.find({
+...   $and: [
+...     { grade: "A" },
+...     { age: { $lt: 21 } }
+...   ]
+... })
+{ "_id" : ObjectId("68e34116a60a463f1999d576"), "name" : "Alice", "age" : 20, "grade" : "A", "subjects" : [ "Math", "English" ], "address" : { "city" : "Mumbai", "pin" : 400001 } }
+{ "_id" : ObjectId("68e3431c748052c0d20e9170"), "name" : "Alice", "age" : 20, "grade" : "A", "subjects" : [ "Math", "English" ], "address" : { "city" : "Mumbai", "pin" : 400001 } }
+{ "_id" : ObjectId("68e3431e748052c0d20e9172"), "name" : "Charlie", "age" : 19, "grade" : "A", "subjects" : [ "Math", "Physics" ], "address" : { "city" : "Mumbai", "pin" : 400002 } }
+> db.students.find(
+...   { grade: "A" },
+...   { name: 1, grade: 1, _id: 0 }
+... )
+{ "name" : "Alice", "grade" : "A" }
+{ "name" : "Alice", "grade" : "A" }
+{ "name" : "Charlie", "grade" : "A" }
+> db.students.updateOne(
+...   { name: "Alice" },
+...   { $set: { grade: "A+" } }
+... )
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.students.updateMany(
+...   { "address.city": "Mumbai" },
+...   { $set: { grade: "A" } }
+... )
+{ "acknowledged" : true, "matchedCount" : 3, "modifiedCount" : 1 }
+> var student = db.students.findOne({ name: "Bob" })
+> student.grade = "B+"
+B+
+> db.students.save(student)
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.students.replaceOne(
+...   { name: "Charlie" },
+...   { name: "Charlie", age: 19, grade: "A+", subjects: ["Math"], address: { city: "Mumbai", pin: 400002 } }
+... )
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.students.deleteOne({ name: "Bob" })
+{ "acknowledged" : true, "deletedCount" : 1 }
+> db.students.deleteMany({ grade: "B" })
+{ "acknowledged" : true, "deletedCount" : 1 }
+> db.students.find({ grade: "A" }).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "school.students",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"grade" : {
+				"$eq" : "A"
+			}
+		},
+		"winningPlan" : {
+			"stage" : "COLLSCAN",
+			"filter" : {
+				"grade" : {
+					"$eq" : "A"
+				}
+			},
+			"direction" : "forward"
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 2,
+		"executionTimeMillis" : 0,
+		"totalKeysExamined" : 0,
+		"totalDocsExamined" : 4,
+		"executionStages" : {
+			"stage" : "COLLSCAN",
+			"filter" : {
+				"grade" : {
+					"$eq" : "A"
+				}
+			},
+			"nReturned" : 2,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 6,
+			"advanced" : 2,
+			"needTime" : 3,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"direction" : "forward",
+			"docsExamined" : 4
+		}
+	},
+	"serverInfo" : {
+		"host" : "csl4-HP-280-G3-MT",
+		"port" : 27017,
+		"version" : "3.6.3",
+		"gitVersion" : "9586e557d54ef70f9ca4b43c26892cd55257e1a5"
+	},
+	"ok" : 1
+}
+> db.students.find({ grade: "A" }).explain("executionStats")exit
+2025-10-06T09:49:34.974+0530 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:58
+> ^C
+bye
+

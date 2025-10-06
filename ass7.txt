@@ -1,0 +1,98 @@
+assn 7
+mysql> ^C
+mysql> -- Table to store students and their marks
+mysql> CREATE TABLE Stud_Marks (
+    ->     RollNo       INT PRIMARY KEY,
+    ->     Name         VARCHAR(100),
+    ->     Total_Marks  INT
+    -> );
+ERROR 1050 (42S01): Table 'Stud_Marks' already exists
+mysql> 
+mysql> -- Table to store results with computed grade/class
+mysql> CREATE TABLE Result (
+    ->     Roll         INT PRIMARY KEY,
+    ->     Name         VARCHAR(100),
+    ->     Class        VARCHAR(30)
+    -> );
+ERROR 1050 (42S01): Table 'Result' already exists
+mysql> INSERT INTO Stud_Marks VALUES (1, 'Alice', 995);
+ERROR 1062 (23000): Duplicate entry '1' for key 'PRIMARY'
+mysql> INSERT INTO Stud_Marks VALUES (2, 'Bob', 920);
+ERROR 1062 (23000): Duplicate entry '2' for key 'PRIMARY'
+mysql> INSERT INTO Stud_Marks VALUES (3, 'Charlie', 850);
+ERROR 1062 (23000): Duplicate entry '3' for key 'PRIMARY'
+mysql> INSERT INTO Stud_Marks VALUES (4, 'David', 800);  -- Should not be inserted into Result
+ERROR 1062 (23000): Duplicate entry '4' for key 'PRIMARY'
+mysql> DELIMITER $$
+mysql> 
+mysql> CREATE FUNCTION comp_Grade(marks INT) RETURNS VARCHAR(30)
+    -> DETERMINISTIC
+    -> BEGIN
+    ->     DECLARE grade VARCHAR(30);
+    -> 
+    ->     IF marks >= 990 AND marks <= 1500 THEN
+    ->         SET grade = 'Distinction';
+    ->     ELSEIF marks >= 900 AND marks <= 989 THEN
+    ->         SET grade = 'First Class';
+    ->     ELSEIF marks >= 825 AND marks <= 899 THEN
+    ->         SET grade = 'Higher Second Class';
+    ->     ELSE
+    ->         SET grade = NULL;  -- No class
+    ->     END IF;
+    -> 
+    ->     RETURN grade;
+    -> END$$
+ERROR 1304 (42000): FUNCTION comp_Grade already exists
+mysql> 
+mysql> DELIMITER ;
+mysql> DELIMITER $$
+mysql> 
+mysql> CREATE PROCEDURE proc_Grade()
+    -> BEGIN
+    ->     DECLARE done INT DEFAULT FALSE;
+    ->     DECLARE v_roll INT;
+    ->     DECLARE v_name VARCHAR(100);
+    ->     DECLARE v_marks INT;
+    ->     DECLARE v_class VARCHAR(30);
+    -> 
+    ->     DECLARE cur CURSOR FOR
+    ->         SELECT RollNo, Name, Total_Marks FROM Stud_Marks;
+    -> 
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    -> 
+    ->     OPEN cur;
+    -> 
+    ->     read_loop: LOOP
+    ->         FETCH cur INTO v_roll, v_name, v_marks;
+    -> 
+    ->         IF done THEN
+    ->             LEAVE read_loop;
+    ->         END IF;
+    -> 
+    ->         SET v_class = comp_Grade(v_marks);
+    -> 
+    ->         IF v_class IS NOT NULL THEN
+    ->             INSERT INTO Result (Roll, Name, Class)
+    ->             VALUES (v_roll, v_name, v_class);
+    ->         END IF;
+    -> 
+    ->     END LOOP;
+    -> 
+    ->     CLOSE cur;
+    -> END$$
+ERROR 1304 (42000): PROCEDURE proc_Grade already exists
+mysql> 
+mysql> DELIMITER ;
+mysql> CALL proc_Grade();
+ERROR 1062 (23000): Duplicate entry '1' for key 'PRIMARY'
+mysql> SELECT * FROM Result;
++------+---------+---------------------+
+| Roll | Name    | Class               |
++------+---------+---------------------+
+|    1 | Alice   | Distinction         |
+|    2 | Bob     | First Class         |
+|    3 | Charlie | Higher Second Class |
++------+---------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> 

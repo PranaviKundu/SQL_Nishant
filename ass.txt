@@ -1,0 +1,569 @@
+mysql> select * from MOVIE
+    -> ;
++------+------------------+--------------+------+
+| m_id | title            | release_date | rank |
++------+------------------+--------------+------+
+|    1 | Om shanti om     | 2000-11-23   |  100 |
+|    2 | Kick             | 2014-11-23   |   99 |
+|    3 | Ready            | 2008-11-23   |   98 |
+|    4 | Taare Zameen Par | 2007-11-23   |   97 |
++------+------------------+--------------+------+
+4 rows in set (0.00 sec)
+
+mysql> insert into MOVIE(m_id, title) values(5, "DID");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from MOVIE
+    -> ;
++------+------------------+--------------+------+
+| m_id | title            | release_date | rank |
++------+------------------+--------------+------+
+|    1 | Om shanti om     | 2000-11-23   |  100 |
+|    2 | Kick             | 2014-11-23   |   99 |
+|    3 | Ready            | 2008-11-23   |   98 |
+|    4 | Taare Zameen Par | 2007-11-23   |   97 |
+|    5 | DID              | NULL         | NULL |
++------+------------------+--------------+------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT into ACTOR values(1, "Salman", "Khan"), (2, "Srijan", "Tripathi"),(3, "Sushant", "Rajput"), (4, "Vicky", "Kaushal");
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from ACTOR
+    -> ;
++------+---------+----------+
+| a_id | f_name  | l_name   |
++------+---------+----------+
+|    1 | Salman  | Khan     |
+|    2 | Srijan  | Tripathi |
+|    3 | Sushant | Rajput   |
+|    4 | Vicky   | Kaushal  |
++------+---------+----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from MOVIE
+    -> ;
++------+------------------+--------------+------+
+| m_id | title            | release_date | rank |
++------+------------------+--------------+------+
+|    1 | Om shanti om     | 2000-11-23   |  100 |
+|    2 | Kick             | 2014-11-23   |   99 |
+|    3 | Ready            | 2008-11-23   |   98 |
+|    4 | Taare Zameen Par | 2007-11-23   |   97 |
+|    5 | DID              | NULL         | NULL |
++------+------------------+--------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select m_id from MOVIE
+    -> ;
++------+
+| m_id |
++------+
+|    1 |
+|    2 |
+|    3 |
+|    4 |
+|    5 |
++------+
+5 rows in set (0.00 sec)
+
+mysql> select m_id, title from MOVIE
+    -> ;
++------+------------------+
+| m_id | title            |
++------+------------------+
+|    1 | Om shanti om     |
+|    2 | Kick             |
+|    3 | Ready            |
+|    4 | Taare Zameen Par |
+|    5 | DID              |
++------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> mysql> SELECT a_id FROM Cast WHERE m_id = (SELECT m_id FROM Movie WHERE title = 'Dangal') AND a_id NOT IN (     SELECT a_id FROM Cast WHERE m_id = (SELECT m_id FROM Movie WHERE title = 'War') );
++------+
+| a_id |
++------+
+|  202 |
+|  210 |
++------+
+2 rows in set (0.00 sec)
+
+mysql> ^C
+mysql> SELECT * FROM Movie;
++------+---------------+--------------+------+
+| m_id | title         | release_date | rank |
++------+---------------+--------------+------+
+|    1 | Sholay        | 1975-08-15   | A    |
+|    2 | PK            | 2014-12-19   | A    |
+|    3 | Lagaan        | 2001-06-15   | B    |
+|    4 | War           | 2019-10-02   | A    |
+|    5 | Dangal        | 2016-12-23   | A    |
+|    6 | Airlift       | 2016-01-22   | B    |
+|    7 | Ram-Lakhan    | 1989-01-27   | C    |
+|    8 | Kabir Singh   | 2019-06-21   | B    |
+|    9 | Kal Ho Naa Ho | 2003-11-28   | A    |
+|   10 | Krrish        | 2006-06-23   | B    |
++------+---------------+--------------+------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Actor;
++------+----------+----------+-----------+
+| a_id | f_name   | l_name   | pay       |
++------+----------+----------+-----------+
+|  201 | Amitabh  | Bachchan | 860000.00 |
+|  202 | Aamir    | Khan     | 700000.00 |
+|  203 | Hrithik  | Roshan   | 600000.00 |
+|  204 | Salman   | Khan     | 810000.00 |
+|  205 | Shahrukh | Khan     | 850000.00 |
+|  206 | Akshay   | Kumar    | 720000.00 |
+|  207 | Ranbir   | Kapoor   | 680000.00 |
+|  208 | Ranveer  | Singh    | 650000.00 |
+|  209 | Sushant  | Singh    | 400000.00 |
+|  210 | Aamir    | Khan     | 900000.00 |
++------+----------+----------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT m_id, title FROM Movie;
++------+---------------+
+| m_id | title         |
++------+---------------+
+|    1 | Sholay        |
+|    2 | PK            |
+|    3 | Lagaan        |
+|    4 | War           |
+|    5 | Dangal        |
+|    6 | Airlift       |
+|    7 | Ram-Lakhan    |
+|    8 | Kabir Singh   |
+|    9 | Kal Ho Naa Ho |
+|   10 | Krrish        |
++------+---------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT m_id, title FROM Movie;
++------+---------------+
+| m_id | title         |
++------+---------------+
+|    1 | Sholay        |
+|    2 | PK            |
+|    3 | Lagaan        |
+|    4 | War           |
+|    5 | Dangal        |
+|    6 | Airlift       |
+|    7 | Ram-Lakhan    |
+|    8 | Kabir Singh   |
+|    9 | Kal Ho Naa Ho |
+|   10 | Krrish        |
++------+---------------+
+10 rows in set (0.01 sec)
+
+mysql> SELECT M.*
+    -> FROM Movie M
+    -> JOIN Direct D ON M.m_id = D.m_id
+    -> JOIN Director Dir ON D.d_id = Dir.d_id
+    -> WHERE Dir.fname = 'Yash' AND Dir.lname = 'Chopra';
++------+---------------+--------------+------+
+| m_id | title         | release_date | rank |
++------+---------------+--------------+------+
+|    1 | Sholay        | 1975-08-15   | A    |
+|    9 | Kal Ho Naa Ho | 2003-11-28   | A    |
++------+---------------+--------------+------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT f_name, l_name FROM Actor;
++----------+----------+
+| f_name   | l_name   |
++----------+----------+
+| Amitabh  | Bachchan |
+| Aamir    | Khan     |
+| Hrithik  | Roshan   |
+| Salman   | Khan     |
+| Shahrukh | Khan     |
+| Akshay   | Kumar    |
+| Ranbir   | Kapoor   |
+| Ranveer  | Singh    |
+| Sushant  | Singh    |
++----------+----------+
+9 rows in set (0.00 sec)
+
+mysql> UPDATE Movie SET release_date = '1975-08-18' WHERE title = 'Sholay';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE Actor A
+    -> SET pay = pay + 60000
+    -> WHERE A.a_id IN (
+    ->     SELECT C.a_id FROM Cast C
+    ->     JOIN Movie M ON C.m_id = M.m_id
+    ->     WHERE M.title = 'Ram-Lakhan'
+    -> );
+Query OK, 2 rows affected (0.04 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> DELETE FROM Actor WHERE pay BETWEEN 40000 AND 70000;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT title FROM Movie WHERE title LIKE 'K%';
++---------------+
+| title         |
++---------------+
+| Kabir Singh   |
+| Kal Ho Naa Ho |
+| Krrish        |
++---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT A.*
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title IN ('Dangal', 'War', 'PK');
++------+----------+--------+-----------+
+| a_id | f_name   | l_name | pay       |
++------+----------+--------+-----------+
+|  202 | Aamir    | Khan   | 700000.00 |
+|  205 | Shahrukh | Khan   | 850000.00 |
+|  203 | Hrithik  | Roshan | 600000.00 |
+|  204 | Salman   | Khan   | 870000.00 |
+|  210 | Aamir    | Khan   | 900000.00 |
++------+----------+--------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT AVG(pay) AS avg_pay
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title = 'Airlift';
++---------------+
+| avg_pay       |
++---------------+
+| 720000.000000 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(DISTINCT A.a_id) AS total_actors
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title = 'Lagaan';
++--------------+
+| total_actors |
++--------------+
+|            2 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT MAX(pay) AS max_pay, MIN(pay) AS min_pay
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title = 'PK';
++-----------+-----------+
+| max_pay   | min_pay   |
++-----------+-----------+
+| 850000.00 | 700000.00 |
++-----------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT SUM(pay) AS total_pay
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title = 'War';
++------------+
+| total_pay  |
++------------+
+| 1470000.00 |
++------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT * FROM Movie ORDER BY title ASC, release_date DESC;
++------+---------------+--------------+------+
+| m_id | title         | release_date | rank |
++------+---------------+--------------+------+
+|    6 | Airlift       | 2016-01-22   | B    |
+|    5 | Dangal        | 2016-12-23   | A    |
+|    8 | Kabir Singh   | 2019-06-21   | B    |
+|    9 | Kal Ho Naa Ho | 2003-11-28   | A    |
+|   10 | Krrish        | 2006-06-23   | B    |
+|    3 | Lagaan        | 2001-06-15   | B    |
+|    2 | PK            | 2014-12-19   | A    |
+|    7 | Ram-Lakhan    | 1989-01-27   | C    |
+|    1 | Sholay        | 1975-08-18   | A    |
+|    4 | War           | 2019-10-02   | A    |
++------+---------------+--------------+------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT f_name, l_name
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title = 'Lagaan'
+    -> UNION
+    -> SELECT f_name, l_name
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title = 'Sholay';
++---------+----------+
+| f_name  | l_name   |
++---------+----------+
+| Aamir   | Khan     |
+| Sushant | Singh    |
+| Amitabh | Bachchan |
++---------+----------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT f_name, l_name
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title = 'PK'
+    -> UNION ALL
+    -> SELECT f_name, l_name
+    -> FROM Actor A
+    -> JOIN Cast C ON A.a_id = C.a_id
+    -> JOIN Movie M ON C.m_id = M.m_id
+    -> WHERE M.title = 'War';
++----------+--------+
+| f_name   | l_name |
++----------+--------+
+| Aamir    | Khan   |
+| Shahrukh | Khan   |
+| Hrithik  | Roshan |
+| Salman   | Khan   |
++----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT a_id FROM Cast
+    -> WHERE m_id = (SELECT m_id FROM Movie WHERE title = 'Lagaan')
+    -> INTERSECT
+    -> SELECT a_id FROM Cast
+    -> WHERE m_id = (SELECT m_id FROM Movie WHERE title = 'PK');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INTERSECT
+SELECT a_id FROM Cast
+WHERE m_id = (SELECT m_id FROM Movie WHERE title' at line 3
+mysql> SELECT DISTINCT C1.a_id
+    -> FROM Cast C1
+    -> JOIN Cast C2 ON C1.a_id = C2.a_id
+    -> WHERE C1.m_id = (SELECT m_id FROM Movie WHERE title = 'Lagaan')
+    -> AND C2.m_id = (SELECT m_id FROM Movie WHERE title = 'PK');
++------+
+| a_id |
++------+
+|  202 |
++------+
+1 row in set (0.00 sec)
+
+mysql> SELECT a_id FROM Cast
+    -> WHERE m_id = (SELECT m_id FROM Movie WHERE title = 'Dangal')
+    -> AND a_id NOT IN (
+    ->     SELECT a_id FROM Cast WHERE m_id = (SELECT m_id FROM Movie WHERE title = 'War')
+    -> );
++------+
+| a_id |
++------+
+|  202 |
+|  210 |
++------+
+2 rows in set (0.00 sec)
+
+mysql> Describe Actor;
++--------+---------------+------+-----+---------+-------+
+| Field  | Type          | Null | Key | Default | Extra |
++--------+---------------+------+-----+---------+-------+
+| a_id   | int(11)       | NO   | PRI | NULL    |       |
+| f_name | varchar(50)   | YES  |     | NULL    |       |
+| l_name | varchar(50)   | YES  |     | NULL    |       |
+| pay    | decimal(10,2) | YES  |     | NULL    |       |
++--------+---------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> Describe Cast;
++-------+--------------+------+-----+---------+-------+
+| Field | Type         | Null | Key | Default | Extra |
++-------+--------------+------+-----+---------+-------+
+| m_id  | int(11)      | YES  | MUL | NULL    |       |
+| a_id  | int(11)      | YES  | MUL | NULL    |       |
+| role  | varchar(100) | YES  |     | NULL    |       |
++-------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> show tables;
++-------------------------+
+| Tables_in_movie_nishant |
++-------------------------+
+| Actor                   |
+| Cast                    |
+| Direct                  |
+| Director                |
+| Movie                   |
++-------------------------+
+5 rows in set (0.00 sec)
+
+mysql> Describe Movie;
++--------------+--------------+------+-----+---------+-------+
+| Field        | Type         | Null | Key | Default | Extra |
++--------------+--------------+------+-----+---------+-------+
+| m_id         | int(11)      | NO   | PRI | NULL    |       |
+| title        | varchar(100) | YES  |     | NULL    |       |
+| release_date | date         | YES  |     | NULL    |       |
+| rank         | char(1)      | YES  |     | NULL    |       |
++--------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from Cast;
++------+------+----------+
+| m_id | a_id | role     |
++------+------+----------+
+|    1 |  201 | Jai      |
+|    2 |  202 | PK       |
+|    2 |  205 | Reporter |
+|    3 |  202 | Bhuvan   |
+|    3 |  209 | Ishwar   |
+|    4 |  203 | Kabir    |
+|    4 |  204 | Khalid   |
+|    5 |  202 | Mahavir  |
+|    5 |  210 | Coach    |
+|    6 |  206 | Ranjit   |
+|    7 |  201 | Ram      |
+|    7 |  204 | Lakhan   |
+|    8 |  208 | Kabir    |
+|    9 |  205 | Aman     |
+|   10 |  203 | Krrish   |
++------+------+----------+
+15 rows in set (0.00 sec)
+
+mysql> select * from Actor
+    -> ;
++------+----------+----------+-----------+
+| a_id | f_name   | l_name   | pay       |
++------+----------+----------+-----------+
+|  201 | Amitabh  | Bachchan | 920000.00 |
+|  202 | Aamir    | Khan     | 700000.00 |
+|  203 | Hrithik  | Roshan   | 600000.00 |
+|  204 | Salman   | Khan     | 870000.00 |
+|  205 | Shahrukh | Khan     | 850000.00 |
+|  206 | Akshay   | Kumar    | 720000.00 |
+|  207 | Ranbir   | Kapoor   | 680000.00 |
+|  208 | Ranveer  | Singh    | 650000.00 |
+|  209 | Sushant  | Singh    | 400000.00 |
+|  210 | Aamir    | Khan     | 900000.00 |
++------+----------+----------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> Select * from Cast;
++------+------+----------+
+| m_id | a_id | role     |
++------+------+----------+
+|    1 |  201 | Jai      |
+|    2 |  202 | PK       |
+|    2 |  205 | Reporter |
+|    3 |  202 | Bhuvan   |
+|    3 |  209 | Ishwar   |
+|    4 |  203 | Kabir    |
+|    4 |  204 | Khalid   |
+|    5 |  202 | Mahavir  |
+|    5 |  210 | Coach    |
+|    6 |  206 | Ranjit   |
+|    7 |  201 | Ram      |
+|    7 |  204 | Lakhan   |
+|    8 |  208 | Kabir    |
+|    9 |  205 | Aman     |
+|   10 |  203 | Krrish   |
++------+------+----------+
+15 rows in set (0.00 sec)
+
+mysql> Select * from Direct;
++------+------+
+| m_id | d_id |
++------+------+
+|    1 |  101 |
+|    2 |  102 |
+|    3 |  103 |
+|    4 |  104 |
+|    5 |  105 |
+|    6 |  106 |
+|    7 |  107 |
+|    8 |  108 |
+|    9 |  101 |
+|   10 |  102 |
++------+------+
+10 rows in set (0.00 sec)
+
+mysql> Select * from Director;
++------+-----------+-----------+--------+
+| d_id | fname     | lname     | gender |
++------+-----------+-----------+--------+
+|  101 | Yash      | Chopra    | M      |
+|  102 | Rajkumar  | Hirani    | M      |
+|  103 | Ashutosh  | Gowariker | M      |
+|  104 | Siddharth | Anand     | M      |
+|  105 | Nitesh    | Tiwari    | M      |
+|  106 | Raja      | Menon     | M      |
+|  107 | Subhash   | Ghai      | M      |
+|  108 | Sandeep   | Reddy     | M      |
++------+-----------+-----------+--------+
+8 rows in set (0.00 sec)
+
+mysql> select * from Movie;
++------+---------------+--------------+------+
+| m_id | title         | release_date | rank |
++------+---------------+--------------+------+
+|    1 | Sholay        | 1975-08-18   | A    |
+|    2 | PK            | 2014-12-19   | A    |
+|    3 | Lagaan        | 2001-06-15   | B    |
+|    4 | War           | 2019-10-02   | A    |
+|    5 | Dangal        | 2016-12-23   | A    |
+|    6 | Airlift       | 2016-01-22   | B    |
+|    7 | Ram-Lakhan    | 1989-01-27   | C    |
+|    8 | Kabir Singh   | 2019-06-21   | B    |
+|    9 | Kal Ho Naa Ho | 2003-11-28   | A    |
+|   10 | Krrish        | 2006-06-23   | B    |
++------+---------------+--------------+------+
+10 rows in set (0.00 sec)
+
+mysql>                                                                                                                                                     
+mysql> select * from Movie;
++------+---------------+--------------+------+
+| m_id | title         | release_date | rank |
++------+---------------+--------------+------+
+|    1 | Sholay        | 1975-08-18   | A    |
+|    2 | PK            | 2014-12-19   | A    |
+|    3 | Lagaan        | 2001-06-15   | B    |
+|    4 | War           | 2019-10-02   | A    |
+|    5 | Dangal        | 2016-12-23   | A    |
+|    6 | Airlift       | 2016-01-22   | B    |
+|    7 | Ram-Lakhan    | 1989-01-27   | C    |
+|    8 | Kabir Singh   | 2019-06-21   | B    |
+|    9 | Kal Ho Naa Ho | 2003-11-28   | A    |
+|   10 | Krrish        | 2006-06-23   | B    |
++------+---------------+--------------+------+
+10 rows in set (0.00 sec)
+
+mysql> show tables;
++-------------------------+
+| Tables_in_movie_nishant |
++-------------------------+
+| Actor                   |
+| Cast                    |
+| Direct                  |
+| Director                |
+| Movie                   |
++-------------------------+
+5 rows in set (0.00 sec)
+
+mysql> :Lmqw;lmqcjnAICNQdoihdjwd;iuq
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ':Lmqw' at line 1
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'lmqcjnAICNQdoihdjwd' at line 1
+    -> 
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'iuq' at line 1
+mysql> clear
+mysql> clr
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'clr' at line 1
+mysql> clear;
+mysql> 

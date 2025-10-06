@@ -1,0 +1,244 @@
+> use company
+switched to db company
+> 
+> db.employees.insertMany([
+...   { name: "Alice", department: "Sales", salary: 50000, age: 28, skills: ["communication", "negotiation"], joined: new Date("2019-01-10") },
+...   { name: "Bob", department: "Sales", salary: 55000, age: 32, skills: ["communication", "crm"], joined: new Date("2018-03-15") },
+...   { name: "Charlie", department: "HR", salary: 45000, age: 25, skills: ["recruitment", "training"], joined: new Date("2020-07-22") },
+...   { name: "David", department: "IT", salary: 70000, age: 35, skills: ["java", "mongodb"], joined: new Date("2017-05-30") },
+...   { name: "Eva", department: "IT", salary: 72000, age: 30, skills: ["python", "mongodb"], joined: new Date("2016-11-12") },
+...   { name: "Frank", department: "Finance", salary: 65000, age: 40, skills: ["accounting", "excel"], joined: new Date("2015-12-01") }
+... ])
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("68e3445fa69532004ad3aa68"),
+		ObjectId("68e3445fa69532004ad3aa69"),
+		ObjectId("68e3445fa69532004ad3aa6a"),
+		ObjectId("68e3445fa69532004ad3aa6b"),
+		ObjectId("68e3445fa69532004ad3aa6c"),
+		ObjectId("68e3445fa69532004ad3aa6d")
+	]
+}
+> db.employees.createIndex({ department: 1 })
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 2,
+	"note" : "all indexes already exist",
+	"ok" : 1
+}
+> db.employees.createIndex({ department: 1, salary: -1 })
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 3,
+	"ok" : 1
+}
+> db.employees.createIndex({ skills: 1 })
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 3,
+	"numIndexesAfter" : 4,
+	"ok" : 1
+}
+> db.employees.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "company.employees"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"department" : 1
+		},
+		"name" : "department_1",
+		"ns" : "company.employees"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"department" : 1,
+			"salary" : -1
+		},
+		"name" : "department_1_salary_-1",
+		"ns" : "company.employees"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"skills" : 1
+		},
+		"name" : "skills_1",
+		"ns" : "company.employees"
+	}
+]
+> db.employees.dropIndex("department_1_salary_-1")
+{ "nIndexesWas" : 4, "ok" : 1 }
+> db.employees.aggregate([
+...   {
+...     $group: {
+...       _id: "$department",
+...       count: { $sum: 1 },
+...       avgSalary: { $avg: "$salary" }
+...     }
+...   }
+... ])
+{ "_id" : "Marketing", "count" : 1, "avgSalary" : 48000 }
+{ "_id" : "IT", "count" : 4, "avgSalary" : 71000 }
+{ "_id" : "Sales", "count" : 4, "avgSalary" : 52500 }
+{ "_id" : "Finance", "count" : 2, "avgSalary" : 65000 }
+{ "_id" : "HR", "count" : 2, "avgSalary" : 45000 }
+> db.employees.aggregate([
+...   { $match: { salary: { $gt: 60000 } } },
+...   { $project: { _id: 0, name: 1, salary: 1 } }
+... ])
+{ "name" : "David", "salary" : 70000 }
+{ "name" : "Eva", "salary" : 72000 }
+{ "name" : "Frank", "salary" : 65000 }
+{ "name" : "David", "salary" : 70000 }
+{ "name" : "Eva", "salary" : 72000 }
+{ "name" : "Frank", "salary" : 65000 }
+> db.employees.aggregate([
+...   { $sort: { age: -1 } }
+... ])
+{ "_id" : ObjectId("68e343f4a69532004ad3aa66"), "name" : "Frank", "department" : "Finance", "salary" : 65000, "age" : 40, "skills" : [ "accounting", "excel" ] }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6d"), "name" : "Frank", "department" : "Finance", "salary" : 65000, "age" : 40, "skills" : [ "accounting", "excel" ], "joined" : ISODate("2015-12-01T00:00:00Z") }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa64"), "name" : "David", "department" : "IT", "salary" : 70000, "age" : 35, "skills" : [ "java", "mongodb" ] }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6b"), "name" : "David", "department" : "IT", "salary" : 70000, "age" : 35, "skills" : [ "java", "mongodb" ], "joined" : ISODate("2017-05-30T00:00:00Z") }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa62"), "name" : "Bob", "department" : "Sales", "salary" : 55000, "age" : 32, "skills" : [ "communication", "crm" ] }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa69"), "name" : "Bob", "department" : "Sales", "salary" : 55000, "age" : 32, "skills" : [ "communication", "crm" ], "joined" : ISODate("2018-03-15T00:00:00Z") }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa65"), "name" : "Eva", "department" : "IT", "salary" : 72000, "age" : 30, "skills" : [ "python", "mongodb" ] }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6c"), "name" : "Eva", "department" : "IT", "salary" : 72000, "age" : 30, "skills" : [ "python", "mongodb" ], "joined" : ISODate("2016-11-12T00:00:00Z") }
+{ "_id" : ObjectId("68e34434a69532004ad3aa67"), "name" : "Grace", "department" : "Marketing", "salary" : 48000, "age" : 29, "skills" : [ "seo", "content writing" ] }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa61"), "name" : "Alice", "department" : "Sales", "salary" : 50000, "age" : 28, "skills" : [ "communication", "negotiation" ] }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa68"), "name" : "Alice", "department" : "Sales", "salary" : 50000, "age" : 28, "skills" : [ "communication", "negotiation" ], "joined" : ISODate("2019-01-10T00:00:00Z") }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa63"), "name" : "Charlie", "department" : "HR", "salary" : 45000, "age" : 25, "skills" : [ "recruitment", "training" ] }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6a"), "name" : "Charlie", "department" : "HR", "salary" : 45000, "age" : 25, "skills" : [ "recruitment", "training" ], "joined" : ISODate("2020-07-22T00:00:00Z") }
+> db.employees.aggregate([
+...   { $unwind: "$skills" },
+...   { $group: { _id: "$skills", count: { $sum: 1 } } },
+...   { $sort: { count: -1 } }
+... ])
+{ "_id" : "communication", "count" : 4 }
+{ "_id" : "mongodb", "count" : 4 }
+{ "_id" : "java", "count" : 2 }
+{ "_id" : "crm", "count" : 2 }
+{ "_id" : "negotiation", "count" : 2 }
+{ "_id" : "accounting", "count" : 2 }
+{ "_id" : "training", "count" : 2 }
+{ "_id" : "recruitment", "count" : 2 }
+{ "_id" : "python", "count" : 2 }
+{ "_id" : "excel", "count" : 2 }
+{ "_id" : "content writing", "count" : 1 }
+{ "_id" : "seo", "count" : 1 }
+> db.employees.aggregate([
+...   { $addFields: { senior: { $gt: ["$age", 30] } } }
+... ])
+{ "_id" : ObjectId("68e343f4a69532004ad3aa61"), "name" : "Alice", "department" : "Sales", "salary" : 50000, "age" : 28, "skills" : [ "communication", "negotiation" ], "senior" : false }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa62"), "name" : "Bob", "department" : "Sales", "salary" : 55000, "age" : 32, "skills" : [ "communication", "crm" ], "senior" : true }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa63"), "name" : "Charlie", "department" : "HR", "salary" : 45000, "age" : 25, "skills" : [ "recruitment", "training" ], "senior" : false }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa64"), "name" : "David", "department" : "IT", "salary" : 70000, "age" : 35, "skills" : [ "java", "mongodb" ], "senior" : true }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa65"), "name" : "Eva", "department" : "IT", "salary" : 72000, "age" : 30, "skills" : [ "python", "mongodb" ], "senior" : false }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa66"), "name" : "Frank", "department" : "Finance", "salary" : 65000, "age" : 40, "skills" : [ "accounting", "excel" ], "senior" : true }
+{ "_id" : ObjectId("68e34434a69532004ad3aa67"), "name" : "Grace", "department" : "Marketing", "salary" : 48000, "age" : 29, "skills" : [ "seo", "content writing" ], "senior" : false }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa68"), "name" : "Alice", "department" : "Sales", "salary" : 50000, "age" : 28, "skills" : [ "communication", "negotiation" ], "joined" : ISODate("2019-01-10T00:00:00Z"), "senior" : false }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa69"), "name" : "Bob", "department" : "Sales", "salary" : 55000, "age" : 32, "skills" : [ "communication", "crm" ], "joined" : ISODate("2018-03-15T00:00:00Z"), "senior" : true }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6a"), "name" : "Charlie", "department" : "HR", "salary" : 45000, "age" : 25, "skills" : [ "recruitment", "training" ], "joined" : ISODate("2020-07-22T00:00:00Z"), "senior" : false }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6b"), "name" : "David", "department" : "IT", "salary" : 70000, "age" : 35, "skills" : [ "java", "mongodb" ], "joined" : ISODate("2017-05-30T00:00:00Z"), "senior" : true }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6c"), "name" : "Eva", "department" : "IT", "salary" : 72000, "age" : 30, "skills" : [ "python", "mongodb" ], "joined" : ISODate("2016-11-12T00:00:00Z"), "senior" : false }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6d"), "name" : "Frank", "department" : "Finance", "salary" : 65000, "age" : 40, "skills" : [ "accounting", "excel" ], "joined" : ISODate("2015-12-01T00:00:00Z"), "senior" : true }
+> db.employees.aggregate([
+...   { $match: { joined: { $gt: new Date("2017-01-01") } } },
+...   { $count: "recentJoinees" }
+... ])
+{ "recentJoinees" : 4 }
+> db.departments.insertMany([
+...   { name: "Sales", location: "New York" },
+...   { name: "HR", location: "Chicago" },
+...   { name: "IT", location: "San Francisco" },
+...   { name: "Finance", location: "Boston" }
+... ])
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("68e3448aa69532004ad3aa6e"),
+		ObjectId("68e3448aa69532004ad3aa6f"),
+		ObjectId("68e3448aa69532004ad3aa70"),
+		ObjectId("68e3448aa69532004ad3aa71")
+	]
+}
+> db.employees.aggregate([
+...   {
+...     $lookup: {
+...       from: "departments",
+...       localField: "department",
+...       foreignField: "name",
+...       as: "deptInfo"
+...     }
+...   },
+...   { $unwind: "$deptInfo" },
+...   {
+...     $project: {
+...       name: 1,
+...       department: 1,
+...       salary: 1,
+...       "deptInfo.location": 1
+...     }
+...   }
+... ])
+{ "_id" : ObjectId("68e343f4a69532004ad3aa61"), "name" : "Alice", "department" : "Sales", "salary" : 50000, "deptInfo" : { "location" : "New York" } }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa62"), "name" : "Bob", "department" : "Sales", "salary" : 55000, "deptInfo" : { "location" : "New York" } }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa63"), "name" : "Charlie", "department" : "HR", "salary" : 45000, "deptInfo" : { "location" : "Chicago" } }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa64"), "name" : "David", "department" : "IT", "salary" : 70000, "deptInfo" : { "location" : "San Francisco" } }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa65"), "name" : "Eva", "department" : "IT", "salary" : 72000, "deptInfo" : { "location" : "San Francisco" } }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa66"), "name" : "Frank", "department" : "Finance", "salary" : 65000, "deptInfo" : { "location" : "Boston" } }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa68"), "name" : "Alice", "department" : "Sales", "salary" : 50000, "deptInfo" : { "location" : "New York" } }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa69"), "name" : "Bob", "department" : "Sales", "salary" : 55000, "deptInfo" : { "location" : "New York" } }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6a"), "name" : "Charlie", "department" : "HR", "salary" : 45000, "deptInfo" : { "location" : "Chicago" } }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6b"), "name" : "David", "department" : "IT", "salary" : 70000, "deptInfo" : { "location" : "San Francisco" } }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6c"), "name" : "Eva", "department" : "IT", "salary" : 72000, "deptInfo" : { "location" : "San Francisco" } }
+{ "_id" : ObjectId("68e3445fa69532004ad3aa6d"), "name" : "Frank", "department" : "Finance", "salary" : 65000, "deptInfo" : { "location" : "Boston" } }
+> db.employees.aggregate([
+...   {
+...     $group: {
+...       _id: "$department",
+...       maxSalary: { $max: "$salary" }
+...     }
+...   }
+... ])
+{ "_id" : "Marketing", "maxSalary" : 48000 }
+{ "_id" : "IT", "maxSalary" : 72000 }
+{ "_id" : "Sales", "maxSalary" : 55000 }
+{ "_id" : "Finance", "maxSalary" : 65000 }
+{ "_id" : "HR", "maxSalary" : 45000 }
+> db.employees.aggregate([
+...   {
+...     $bucket: {
+...       groupBy: "$age",
+...       boundaries: [0, 30, 40, 100],
+...       default: "Other",
+...       output: {
+...         count: { $sum: 1 },
+...         avgSalary: { $avg: "$salary" }
+...       }
+...     }
+...   }
+... ])
+{ "_id" : 0, "count" : 5, "avgSalary" : 47600 }
+{ "_id" : 30, "count" : 6, "avgSalary" : 65666.66666666667 }
+{ "_id" : 40, "count" : 2, "avgSalary" : 65000 }
+> db.employees.aggregate([
+...   { $sort: { salary: -1 } },
+...   { $skip: 3 },
+...   { $limit: 2 }
+... ])
+{ "_id" : ObjectId("68e343f4a69532004ad3aa64"), "name" : "David", "department" : "IT", "salary" : 70000, "age" : 35, "skills" : [ "java", "mongodb" ] }
+{ "_id" : ObjectId("68e343f4a69532004ad3aa66"), "name" : "Frank", "department" : "Finance", "salary" : 65000, "age" : 40, "skills" : [ "accounting", "excel" ] }
+> 
+

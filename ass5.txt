@@ -1,0 +1,229 @@
+mysql> CREATE TABLE Borrower (
+    ->     Roll_no       NUMBER(5),
+    ->     Name          VARCHAR2(50),
+    ->     Dateofissue   DATE,
+    ->     NameofBook    VARCHAR2(100),
+    ->     Status        CHAR(1)  -- 'I' for Issued, 'R' for Returned
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER(5),
+    Name          VARCHAR2(50),
+    Dateofissue   DATE,
+    NameofBoo' at line 2
+mysql> CREATE TABLE Borrower (
+    ->     Roll_no       NUMBER(5),
+    ->     Name          VARCHAR2(50),
+    ->     Dateofissue   DATE,
+    ->     NameofBook    VARCHAR2(100),
+    ->     Status        CHAR(1)  -- 'I' for Issued, 'R' for Returned
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NUMBER(5),
+    Name          VARCHAR2(50),
+    Dateofissue   DATE,
+    NameofBoo' at line 2
+mysql> clear
+mysql> ^C
+mysql> -- Check Borrower status
+mysql> SELECT * FROM Borrower WHERE Rollin = 101;
++--------+-------+-------------+------------+--------+
+| Rollin | Name  | DateofIssue | NameofBook | Status |
++--------+-------+-------------+------------+--------+
+|    101 | Alice | 2025-07-01  | C++ Primer | R      |
++--------+-------+-------------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> -- Check Fine table
+mysql> SELECT * FROM Fine WHERE Roll_no = 101;
++---------+------------+---------+
+| Roll_no | FineDate   | Amt     |
++---------+------------+---------+
+|     101 | 2025-08-04 | 1700.00 |
++---------+------------+---------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO Borrower VALUES 
+    -> (101, 'Arjun', '2025-07-01', 'C++ Primer', 'I'),
+    -> (102, 'Sneha', '2025-07-10', 'DBMS Concepts', 'I'),
+    -> (103, 'Raj', '2025-06-15', 'Data Structures', 'R');
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE ReturnBook(IN p_roll INT, IN p_book VARCHAR(100))
+    -> BEGIN
+    ->     DECLARE v_issue_date DATE;
+    ->     DECLARE v_status CHAR(1);
+    ->     DECLARE v_days INT;
+    ->     DECLARE v_fine_amt DECIMAL(10,2) DEFAULT 0;
+    -> 
+    ->     -- Custom exception (simulate via SIGNAL in MySQL)
+    ->     DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    ->     BEGIN
+    ->         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Unexpected error occurred.';
+    ->     END;
+    -> 
+    ->     -- Get issue date and status
+    ->     SELECT DateofIssue, Status INTO v_issue_date, v_status
+    ->     FROM Borrower
+    ->     WHERE Rollin = p_roll AND NameofBook = p_book;
+    -> 
+    ->     -- If already returned, raise error
+    ->     IF v_status = 'R' THEN
+    ->         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Book already returned.';
+    ->     END IF;
+    -> 
+    ->     -- Calculate days since issue
+    ->     SET v_days = DATEDIFF(CURDATE(), v_issue_date);
+    -> 
+    ->     -- Fine calculation
+    ->     IF v_days > 30 THEN
+    ->         SET v_fine_amt = v_days * 50;
+    ->     ELSEIF v_days >= 15 THEN
+    ->         SET v_fine_amt = v_days * 5;
+    ->     END IF;
+    -> 
+    ->     -- Update book status to Returned
+    ->     UPDATE Borrower
+    ->     SET Status = 'R'
+    ->     WHERE Rollin = p_roll AND NameofBook = p_book;
+    -> 
+    ->     -- If fine applicable, insert into Fine table
+    ->     IF v_fine_amt > 0 THEN
+    ->         INSERT INTO Fine (Roll_no, FineDate, Amt)
+    ->         VALUES (p_roll, CURDATE(), v_fine_amt);
+    ->     END IF;
+    -> END;
+    -> //
+ERROR 1304 (42000): PROCEDURE ReturnBook already exists
+mysql> 
+mysql> DELIMITER ;
+mysql> CALL ReturnBook(101, 'C++ Primer');
+ERROR 1172 (42000): Result consisted of more than one row
+mysql> -- Check Borrower status
+mysql> SELECT * FROM Borrower WHERE Rollin = 101;
++--------+-------+-------------+------------+--------+
+| Rollin | Name  | DateofIssue | NameofBook | Status |
++--------+-------+-------------+------------+--------+
+|    101 | Alice | 2025-07-01  | C++ Primer | R      |
+|    101 | Arjun | 2025-07-01  | C++ Primer | I      |
++--------+-------+-------------+------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Check Fine table
+mysql> SELECT * FROM Fine WHERE Roll_no = 101;
++---------+------------+---------+
+| Roll_no | FineDate   | Amt     |
++---------+------------+---------+
+|     101 | 2025-08-04 | 1700.00 |
++---------+------------+---------+
+1 row in set (0.00 sec)
+
+mysql> SELECT DateofIssue, Status INTO v_issue_date, v_status
+    -> FROM Borrower
+    -> WHERE Rollin = p_roll AND NameofBook = p_book;
+ERROR 1327 (42000): Undeclared variable: v_issue_date
+mysql> SET @p_roll = 101;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SET @p_book = 'C++ Primer';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> SELECT DateofIssue, Status
+    -> INTO @v_issue_date, @v_status
+    -> FROM Borrower
+    -> WHERE Rollin = @p_roll AND NameofBook = @p_book AND Status = 'I'
+    -> LIMIT 1;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> 
+mysql> -- View what got fetched
+mysql> SELECT @v_issue_date, @v_status;
++---------------+-----------+
+| @v_issue_date | @v_status |
++---------------+-----------+
+| 2025-07-01    | I         |
++---------------+-----------+
+1 row in set (0.00 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE TestBorrow()
+    -> BEGIN
+    ->     DECLARE v_issue_date DATE;
+    ->     DECLARE v_status CHAR(1);
+    -> 
+    ->     DECLARE p_roll INT DEFAULT 101;
+    ->     DECLARE p_book VARCHAR(100) DEFAULT 'C++ Primer';
+    -> 
+    ->     SELECT DateofIssue, Status
+    ->     INTO v_issue_date, v_status
+    ->     FROM Borrower
+    ->     WHERE Rollin = p_roll AND NameofBook = p_book AND Status = 'I'
+    ->     LIMIT 1;
+    -> 
+    ->     SELECT v_issue_date, v_status;
+    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> 
+mysql> CALL TestBorrow();
++--------------+----------+
+| v_issue_date | v_status |
++--------------+----------+
+| 2025-07-01   | I        |
++--------------+----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| Banking            |
+| Fines              |
+| StudentDB          |
+| ass5               |
+| circle_areas       |
+| db                 |
+| db1                |
+| demo               |
+| demo1              |
+| employee           |
+| employeedb         |
+| library_db         |
+| movie_nishant      |
+| mysql              |
+| new                |
+| performance_schema |
+| prac               |
+| test               |
+| user               |
++--------------------+
+20 rows in set (0.00 sec)
+
+mysql> use movie_nishant
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SELECT a.*
+    -> FROM Actor a
+    -> JOIN Cast c ON a.a_id = c.a_id
+    -> JOIN Movie m ON c.m_id = m.m_id
+    -> WHERE m.title IN ('Sholay', 'K3G');
++------+---------+----------+------------+
+| a_id | f_name  | l_name   | pay        |
++------+---------+----------+------------+
+|  201 | Amitabh | Bachchan | 1040000.00 |
++------+---------+----------+------------+
+1 row in set (0.04 sec)
+
+mysql> tee ass3.txt

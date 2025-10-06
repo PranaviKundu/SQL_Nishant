@@ -1,0 +1,310 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| Banking            |
+| Fines              |
+| StudentDB          |
+| db                 |
+| db1                |
+| demo               |
+| demo1              |
+| employee           |
+| employeedb         |
+| movie_nishant      |
+| mysql              |    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+| new                |
+| performance_schema |
+| prac               |
+| user               |
++--------------------+
+16 rows in set (0.06 sec)
+
+mysql> create procedure even_odd (in i int)
+    -> begin
+    -> if i%2 = 0 then
+    -> select 'Number is even';
+ERROR 1046 (3D000): No database selected
+mysql> show databases;    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| Banking            |
+| Fines              |
+| StudentDB          |
+| db                 |
+| db1                |
+| demo               |
+| demo1              |    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+| employee           |
+| employeedb         |
+| movie_nishant      |
+| mysql              |
+| new                |
+| performance_schema |
+| prac               |
+| user               |
++--------------------+
+16 rows in set (0.00 sec)
+
+mysql> create database test;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use database test;
+ERROR 1049 (42000): Unknown database 'database'
+mysql> use test;
+Database changed
+mysql> ^C
+mysql> create procedure even_odd (in i int)
+    -> begin
+    -> if i%2 = 0 then
+    -> select 'Number is even';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 4
+mysql> create procedure even_odd (in i int) begin if i%2 = 0 then select "Number is even";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> create procedure even_odd (in i int)
+    -> begin
+    -> if i%2 = 0 then
+    -> select "Number is even";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 4
+mysql> create procedure even_odd(in i int)
+    -> begin
+    -> if i%2 = 0 then
+    -> select "number is even";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 4
+mysql> clear
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| Banking            |
+| Fines              |
+| StudentDB          |
+| db                 |
+| db1                |
+| demo               |
+| demo1              |
+| employee           |
+| employeedb         |
+| movie_nishant      |
+| mysql              |
+| new                |
+| performance_schema |
+| prac               |
+| test               |
+| user               |
++--------------------+
+17 rows in set (0.00 sec)
+
+mysql> use movie_nishant
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables
+    -> ;
++-------------------------+
+| Tables_in_movie_nishant |
++-------------------------+
+| Actor                   |
+| Cast                    |
+| Direct                  |
+| Director                |
+| Movie                   |
++-------------------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Movie;
++------+---------------+--------------+------+
+| m_id | title         | release_date | rank |
++------+---------------+--------------+------+
+|    1 | Sholay        | 1975-08-18   | A    |    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+|    2 | PK            | 2014-12-19   | A    |
+|    3 | Lagaan        | 2001-06-15   | B    |
+|    4 | War           | 2019-10-02   | A    |
+|    5 | Dangal        | 2016-12-23   | A    |
+|    6 | Airlift       | 2016-01-22   | B    |
+|    7 | Ram-Lakhan    | 1989-01-27   | C    |
+|    8 | Kabir Singh   | 2019-06-21   | B    |
+|    9 | Kal Ho Naa Ho | 2003-11-28   | A    |
+|   10 | Krrish        | 2006-06-23   | B    |
++------+---------------+--------------+------+    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+10 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure demo(i int )
+    -> begin
+    -> delcare name varchar(20);
+    -> select title into name from Movie where m_id = i;
+    -> end;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name varchar(20);
+select title into name from Movie where m_id = i;
+end' at line 3
+mysql> create procedure demo(i int ) begin delcare name1 varchar(100); select title into name1 from M    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 ovie where m_id = i; end;//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name1 varchar(100); select title into name1 from Movie where m_id = i; end' at line 1
+mysql> create procedure demo1(i int ) begin delcare name1 varchar(100); select title into name1 from Movie where m_id = i; end;//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name1 varchar(100); select title into name1 from Movie where m_id = i; end' at line 1
+mysql> create procedure demo4(i int ) begin delcare name1 varchar(100); select title into name1 from Movie where m_id = i; end;//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name1 varchar(100); select title into name1 from Movie where m_id = i; end' at line 1
+mysql> create procedure demo4(i int ) begin delcare name4 varchar(100); select title into name4 from     -> END;
+    -> //
+Query OK, 0 rows affected (0.00 Movie where m_id = i; end;//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name4 varchar(100); select title into name4 from Movie where m_id = i; end' at line 1
+mysql> create procedure demo4(i int ) begin delcare name4 varchar(100); select title into name4 from Movie where m_id = i; end;//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name4 varchar(100); select title into name4 from Movie where m_id = i; end' at line 1
+mysql> create procedure demo(i int )
+    -> begin
+    -> delcare name varchar(20);
+    -> select title into name from Movie where m_id = i;
+    -> end;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name varchar(20);
+select title into name from Movie where m_id = i;    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+end' at line 3
+mysql> ^C
+mysql> create procedure test(i int )
+    -> begin
+    -> delcare name1 varchar(20);    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+    -> select Movie.title into name1 from Movie where Movie.m_id = i;
+    -> select name1;
+    -> end;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name1 varchar(20);
+select Movie.title into name1 from Movie where Movie.m_id = i' at line 3
+mysql> create procedure test(i int ) begin delcare name1 varchar(20); select Movie.title  from Movie where Movie.m_id = i;  end;//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name1 varchar(20); select Movie.title  from Movie where Movie.m_id = i;  end' at line 1
+mysql> create procedure test(i int ) begin declare name1 varchar(20); select Movie.title into name1 from Movie where Movie.m_id = i; select name1; end;//
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE demo(IN i INT)
+    -> BEGIN
+    ->     DECLARE name VARCHAR(100);
+    ->     
+    ->     SELECT title INTO name
+    ->     FROM Movie
+    ->     WHERE m_id = i;
+    -> 
+    ->     SELECT name AS Movie_Name;
+    -> END;    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> call demo(2);
++------------+
+| Movie_Name |
++------------+
+| PK         |
++------------+
+1 row in set (0.02 sec)
+
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select @1 = 1001//
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/' at line 1
+mysql> call demo(3);
++------------+
+| Movie_Name |    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
++------------+
+| Lagaan     |
++------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> ^C
+mysql> 
+mysql> create procedure demo2(i int) begin update Movie set rank1 = A where m_id = i; end
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+    -> ;    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'end' at line 1
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE demo2(IN i INT)
+    -> BEGIN
+    ->     UPDATE Movie
+    ->     SET rank = 'A'
+    ->     WHERE m_id = i;
+    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> 
+mysql> call demo2(2);
+Query OK, 0 rows affected (0.04 sec)    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 
+
+mysql> select * from Movie;
++------+---------------+--------------+------+
+| m_id | title         | release_date | rank |
++------+---------------+--------------+------+
+|    1 | Sholay        | 1975-08-18   | A    |
+|    2 | PK            | 2014-12-19   | A    |
+|    3 | Lagaan        | 2001-06-15   | B    |
+|    4 | War           | 2019-10-02   | A    |
+|    5 | Dangal        | 2016-12-23   | A    |
+|    6 | Airlift       | 2016-01-22   | B    |
+|    7 | Ram-Lakhan    | 1989-01-27   | C    |
+|    8 | Kabir Singh   | 2019-06-21   | B    |    -> END;
+    -> //CALL calculate_areas();
+
+Query OK, 0 rows affected (0.00 CALL calculate_areas();
+
+|    9 | Kal Ho Naa Ho | 2003-11-28   | A    |
+|   10 | Krrish        | 2006-06-23   | B    |
++------+---------------+--------------+------+
+10 rows in set (0.00 sec)
+
+mysql> call demo2(3);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from Movie;
++------+---------------+--------------+------+
+| m_id | title         | release_date | rank |
++------+---------------+--------------+------+
+|    1 | Sholay        | 1975-08-18   | A    |
+|    2 | PK            | 2014-12-19   | A    |
+|    3 | Lagaan        | 2001-06-15   | A    |
+|    4 | War           | 2019-10-02   | A    |
+|    5 | Dangal        | 2016-12-23   | A    |
+|    6 | Airlift       | 2016-01-22   | B    |
+|    7 | Ram-Lakhan    | 1989-01-27   | C    |
+|    8 | Kabir Singh   | 2019-06-21   | B    |
+|    9 | Kal Ho Naa Ho | 2003-11-28   | A    |
+|   10 | Krrish        | 2006-06-23   | B    |
++------+---------------+--------------+------+
+10 rows in set (0.00 sec)
+

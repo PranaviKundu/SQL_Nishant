@@ -1,0 +1,533 @@
+ass
+mysql> show databases;
++--------------------------+
+| Database                 |
++--------------------------+
+| information_schema       |
+| Banking                  |
+| Fines                    |
+| StudentDB                |
+| ass5                     |
+| circle_areas             |
+| db                       |
+| db1                      |
+| demo                     |
+| demo1                    |
+| employee                 |
+| employeedb               |
+| library_db               |
+| movie_nishant            |
+| movie_subqueries_nishant |
+| mysql                    |
+| new                      |
+| performance_schema       |
+| prac                     |
+| test                     |
+| user                     |
++--------------------------+
+21 rows in set (0.00 sec)
+
+mysql> show movie_subqueries_nishant
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'movie_subqueries_nishant' at line 1
+mysql> use movie_subqueries_nishant
+Database changed
+mysql> SELECT DISTINCT a.*
+    -> FROM Actor a
+    -> JOIN Cast c ON a.a_id = c.a_id
+    -> JOIN Movie m ON m.m_id = c.m_id
+    -> WHERE m.title IN ('Sholay', 'K3G');
+ERROR 1146 (42S02): Table 'movie_subqueries_nishant.Actor' doesn't exist
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> DROP TABLE IF EXISTS Cast, Direct, Actor, Director, Movie;
+Query OK, 0 rows affected, 5 warnings (0.00 sec)
+
+mysql> 
+mysql> CREATE TABLE Movie (
+    ->     m_id INT PRIMARY KEY,
+    ->     title VARCHAR(100),
+    ->     release_date DATE,
+    ->     rank CHAR(1),
+    ->     budget INT
+    -> );
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> 
+mysql> CREATE TABLE Director (
+    ->     d_id INT PRIMARY KEY,
+    ->     fname VARCHAR(50),
+    ->     lname VARCHAR(50),
+    ->     gender CHAR(1)
+    -> );
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> 
+mysql> CREATE TABLE Direct (
+    ->     m_id INT,
+    ->     d_id INT,
+    ->     FOREIGN KEY (m_id) REFERENCES Movie(m_id),
+    ->     FOREIGN KEY (d_id) REFERENCES Director(d_id)
+    -> );
+Query OK, 0 rows affected (0.30 sec)
+
+mysql> 
+mysql> CREATE TABLE Actor (
+    ->     a_id INT PRIMARY KEY,
+    ->     f_name VARCHAR(50),
+    ->     l_name VARCHAR(50),
+    ->     salary INT
+    -> );
+Query OK, 0 rows affected (0.21 sec)
+
+mysql> 
+mysql> CREATE TABLE Cast (
+    ->     m_id INT,
+    ->     a_id INT,
+    ->     role VARCHAR(50),
+    ->     FOREIGN KEY (m_id) REFERENCES Movie(m_id),
+    ->     FOREIGN KEY (a_id) REFERENCES Actor(a_id)
+    -> );
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> INSERT INTO Movie (m_id, title, release_date, rank, budget) VALUES
+    -> (1, 'Sholay', '1975-08-15', 'A', 20000000),
+    -> (2, 'K3G', '2001-12-14', 'A', 30000000),
+    -> (3, 'PK', '2014-12-19', 'B', 25000000),
+    -> (4, 'Dangal', '2016-12-23', 'A', 70000000),
+    -> (5, 'War', '2019-10-02', 'A', 60000000),
+    -> (6, 'Airlift', '2016-01-22', 'B', 40000000),
+    -> (7, 'Ram-Lakhan', '1989-01-27', 'C', 15000000),
+    -> (8, 'Kabir Singh', '2019-06-21', 'B', 30000000),ass5      
+    -> (9, 'Shakuntala Devi', '2020-07-31', 'B', 35000000),
+    -> (10, 'Lagaan', '2001-06-15', 'A', 55000000);
+Query OK, 10 rows affected (0.03 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Director (d_id, fname, lname, gender) VALUES
+    -> (1, 'Ramesh', 'Sippy', 'M'),
+    -> (2, 'Karan', 'Johar', 'M'),
+    -> (3, 'Rajkumar', 'Hirani', 'M'),
+    -> (4, 'Nitesh', 'Tiwari', 'M'),
+    -> (5, 'Meghna', 'Gulzar', 'F'),
+    -> (6, 'Zoya', 'Akhtar', 'F');
+Query OK, 6 rows affected (0.03 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Direct (m_id, d_id) VALUES
+    -> (1, 1),  -- Sholay - Ramesh Sippy
+    -> (2, 2),  -- K3G - Karan Johar
+    -> (3, 3),  -- PK - Rajkumar Hirani
+    -> (4, 4),  -- Dangal - Nitesh Tiwari
+    -> (5, 2),  -- War - Karan Johar
+    -> (6, 3),  -- Airlift - Rajkumar Hirani
+    -> (7, 2),  -- Ram-Lakhan - Karan Johar
+    -> (8, 5),  -- Kabir Singh - Meghna Gulzar (female)
+    -> (9, 6),  -- Shakuntala Devi - Zoya Akhtar (female)
+    -> (10, 4); -- Lagaan - Nitesh Tiwari
+Query OK, 10 rows affected (0.07 sec)ass5      
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Actor (a_id, f_name, l_name, salary) VALUES
+    -> (1, 'Amitabh', 'Bachchan', 900000),
+    -> (2, 'Shah', 'Rukh', 800000),
+    -> (3, 'Aamir', 'Khan', 850000),
+    -> (4, 'Akshay', 'Kumar', 750000),
+    -> (5, 'Hrithik', 'Roshan', 650000),
+    -> (6, 'Alia', 'Bhatt', 200000),
+    -> (7, 'Deepika', 'Padukone', 950000),
+    -> (8, 'Ranbir', 'Kapoor', 400000),
+    -> (9, 'Kangana', 'Ranaut', 500000),
+    -> (10, 'Rajkummar', 'Rao', 300000);
+Query OK, 10 rows affected (0.03 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Cast (m_id, a_id, role) VALUES
+    -> (1, 1, 'Jai'),      -- Sholay
+    -> (2, 2, 'Rahul'),    -- K3G
+    -> (3, 3, 'PK'),       -- PK
+    -> (4, 3, 'Mahavir'),  -- Dangal
+    -> (4, 6, 'Geeta'),ass5      
+    -> (5, 5, 'Khalid'),   -- War
+    -> (6, 4, 'Ranjit'),   -- Airlift
+    -> (7, 2, 'Lakhan'),   -- Ram-Lakhan
+    -> (8, 6, 'Preeti'),   -- Kabir Singh
+    -> (9, 9, 'Shakuntala'),
+    -> (10, 1, 'Captain'), -- Lagaan
+    -> (10, 7, 'Gauri');
+Query OK, 12 rows affected (0.08 sec)
+Records: 12  Duplicates: 0  Warnings: 0
+
+mysql> SELECT DISTINCT a.*
+    -> FROM Actor a
+    -> JOIN Cast c ON a.a_id = c.a_id
+    -> JOIN Movie m ON m.m_id = c.m_id
+    -> WHERE m.title IN ('Sholay', 'K3G');
++------+---------+----------+--------+
+| a_id | f_name  | l_name   | salary |
++------+---------+----------+--------+
+|    1 | Amitabh | Bachchan | 900000 |
+|    2 | Shah    | Rukh     | 800000 |
++------+---------+----------+--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT m.title, d.fname, d.lname
+    -> FROM Movie m
+    -> JOIN Direct dr ON m.m_id = dr.m_id
+    -> JOIN Director d ON dr.d_id = d.d_id
+    -> WHERE YEAR(m.release_date) = 2019
+    -> ORDER BY m.budget DESC
+    -> LIMIT 5;
++-------------+--------+--------+
+| title       | fname  | lname  |
++-------------+--------+--------+
+| War         | Karan  | Johar  |
+| Kabir Singh | Meghna | Gulzar |
++-------------+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT m.title, d.fname, d.lname
+    -> FROM Movie m
+    -> JOIN Direct dr ON m.m_id = dr.m_id
+    -> JOIN Director d ON dr.d_id = d.d_id
+    -> WHERE YEAR(m.release_date) = 2019
+    -> ORDER BY m.budget DESC
+    -> LIMIT 5;
++-------------+--------+--------+
+| title       | fname  | lname  |
++-------------+--------+--------+
+| War         | Karan  | Johar  |
+| Kabir Singh | Meghna | Gulzar |
++-------------+--------+--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT m.title, COUNT(c.a_id) AS actor_count
+    -> FROM Movie m
+    -> JOIN Cast c ON m.m_id = c.m_id
+    -> GROUP BY m.m_id;
++-----------------+-------------+
+| title           | actor_count |
++-----------------+-------------+
+| Sholay          |           1 |
+| K3G             |           1 |
+| PK              |           1 |
+| Dangal          |           2 |
+| War             |           1 |
+| Airlift         |           1 |
+| Ram-Lakhan      |           1 |
+| Kabir Singh     |           1 |
+| Shakuntala Devi |           1 |
+| Lagaan          |           2 |
++-----------------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT a.f_name, a.l_name, c.role
+    -> FROM Actor a
+    -> JOIN Cast c ON a.a_id = c.a_id
+    -> WHERE a.salary > 200000;
++---------+----------+------------+
+| f_name  | l_name   | role       |
++---------+----------+------------+
+| Amitabh | Bachchan | Jai        |
+| Amitabh | Bachchan | Captain    |
+| Shah    | Rukh     | Rahul      |
+| Shah    | Rukh     | Lakhan     |
+| Aamir   | Khan     | PK         |
+| Aamir   | Khan     | Mahavir    |
+| Akshay  | Kumar    | Ranjit     |
+| Hrithik | Roshan   | Khalid     |
+| Deepika | Padukone | Gauri      |
+| Kangana | Ranaut   | Shakuntala |
++---------+----------+------------+
+10 rows in set (0.01 sec)
+
+mysql> SELECT DISTINCT m.*
+    -> FROM Movie m
+    -> JOIN Direct dr ON m.m_id = dr.m_id
+    -> JOIN Director d ON dr.d_id = d.d_id
+    -> WHERE d.gender = 'F';
++------+-----------------+--------------+------+----------+
+| m_id | title           | release_date | rank | budget   |
++------+-----------------+--------------+------+----------+
+|    8 | Kabir Singh     | 2019-06-21   | B    | 30000000 |
+|    9 | Shakuntala Devi | 2020-07-31   | B    | 35000000 |
++------+-----------------+--------------+------+----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT m.title, a.*
+    -> FROM Movie m
+    -> JOIN Cast c ON m.m_id = c.m_id
+    -> JOIN Actor a ON c.a_id = a.a_id
+    -> WHERE (c.m_id, a.salary) IN (
+    ->     SELECT c.m_id, MAX(a.salary)
+    ->     FROM Cast c
+    ->     JOIN Actor a ON c.a_id = a.a_id
+    ->     GROUP BY c.m_id
+    -> );
++-----------------+------+---------+----------+--------+
+| title           | a_id | f_name  | l_name   | salary |
++-----------------+------+---------+----------+--------+
+| Sholay          |    1 | Amitabh | Bachchan | 900000 |
+| K3G             |    2 | Shah    | Rukh     | 800000 |
+| PK              |    3 | Aamir   | Khan     | 850000 |
+| Dangal          |    3 | Aamir   | Khan     | 850000 |
+| War             |    5 | Hrithik | Roshan   | 650000 |
+| Airlift         |    4 | Akshay  | Kumar    | 750000 |
+| Ram-Lakhan      |    2 | Shah    | Rukh     | 800000 |
+| Kabir Singh     |    6 | Alia    | Bhatt    | 200000 |
+| Shakuntala Devi |    9 | Kangana | Ranaut   | 500000 |
+| Lagaan          |    7 | Deepika | Padukone | 950000 |
++-----------------+------+---------+----------+--------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT m.*
+    -> FROM Movie m
+    -> JOIN Direct dr ON m.m_id = dr.m_id
+    -> JOIN Director d ON dr.d_id = d.d_id
+    -> WHERE d.fname = 'Karan' AND d.lname = 'Johar';
++------+------------+--------------+------+----------+
+| m_id | title      | release_date | rank | budget   |
++------+------------+--------------+------+----------+
+|    2 | K3G        | 2001-12-14   | A    | 30000000 |
+|    5 | War        | 2019-10-02   | A    | 60000000 |
+|    7 | Ram-Lakhan | 1989-01-27   | C    | 15000000 |
++------+------------+--------------+------+----------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT a.f_name, a.l_name, c.role
+    -> FROM Actor a
+    -> CROSS JOIN (
+    ->     SELECT DISTINCT role FROM Cast
+    -> ) AS c;
++-----------+----------+------------+
+| f_name    | l_name   | role       |
++-----------+----------+------------+
+| Amitabh   | Bachchan | Jai        |
+| Shah      | Rukh     | Jai        |
+| Aamir     | Khan     | Jai        |
+| Akshay    | Kumar    | Jai        |
+| Hrithik   | Roshan   | Jai        |
+| Alia      | Bhatt    | Jai        |
+| Deepika   | Padukone | Jai        |
+| Ranbir    | Kapoor   | Jai        |
+| Kangana   | Ranaut   | Jai        |
+| Rajkummar | Rao      | Jai        |
+| Amitabh   | Bachchan | Rahul      |
+| Shah      | Rukh     | Rahul      |
+| Aamir     | Khan     | Rahul      |
+| Akshay    | Kumar    | Rahul      |
+| Hrithik   | Roshan   | Rahul      |
+| Alia      | Bhatt    | Rahul      |
+| Deepika   | Padukone | Rahul      |
+| Ranbir    | Kapoor   | Rahul      |
+| Kangana   | Ranaut   | Rahul      |
+| Rajkummar | Rao      | Rahul      |
+| Amitabh   | Bachchan | PK         |
+| Shah      | Rukh     | PK         |
+| Aamir     | Khan     | PK         |
+| Akshay    | Kumar    | PK         |
+| Hrithik   | Roshan   | PK         |
+| Alia      | Bhatt    | PK         |
+| Deepika   | Padukone | PK         |
+| Ranbir    | Kapoor   | PK         |
+| Kangana   | Ranaut   | PK         |
+| Rajkummar | Rao      | PK         |
+| Amitabh   | Bachchan | Mahavir    |
+| Shah      | Rukh     | Mahavir    |
+| Aamir     | Khan     | Mahavir    |
+| Akshay    | Kumar    | Mahavir    |
+| Hrithik   | Roshan   | Mahavir    |
+| Alia      | Bhatt    | Mahavir    |
+| Deepika   | Padukone | Mahavir    |
+| Ranbir    | Kapoor   | Mahavir    |
+| Kangana   | Ranaut   | Mahavir    |
+| Rajkummar | Rao      | Mahavir    |
+| Amitabh   | Bachchan | Geeta      |
+| Shah      | Rukh     | Geeta      |
+| Aamir     | Khan     | Geeta      |
+| Akshay    | Kumar    | Geeta      |
+| Hrithik   | Roshan   | Geeta      |
+| Alia      | Bhatt    | Geeta      |
+| Deepika   | Padukone | Geeta      |
+| Ranbir    | Kapoor   | Geeta      |
+| Kangana   | Ranaut   | Geeta      |
+| Rajkummar | Rao      | Geeta      |
+| Amitabh   | Bachchan | Khalid     |
+| Shah      | Rukh     | Khalid     |
+| Aamir     | Khan     | Khalid     |
+| Akshay    | Kumar    | Khalid     |
+| Hrithik   | Roshan   | Khalid     |
+| Alia      | Bhatt    | Khalid     |
+| Deepika   | Padukone | Khalid     |
+| Ranbir    | Kapoor   | Khalid     |
+| Kangana   | Ranaut   | Khalid     |
+| Rajkummar | Rao      | Khalid     |
+| Amitabh   | Bachchan | Ranjit     |
+| Shah      | Rukh     | Ranjit     |
+| Aamir     | Khan     | Ranjit     |
+| Akshay    | Kumar    | Ranjit     |
+| Hrithik   | Roshan   | Ranjit     |
+| Alia      | Bhatt    | Ranjit     |
+| Deepika   | Padukone | Ranjit     |
+| Ranbir    | Kapoor   | Ranjit     |
+| Kangana   | Ranaut   | Ranjit     |
+| Rajkummar | Rao      | Ranjit     |
+| Amitabh   | Bachchan | Lakhan     |
+| Shah      | Rukh     | Lakhan     |
+| Aamir     | Khan     | Lakhan     |
+| Akshay    | Kumar    | Lakhan     |
+| Hrithik   | Roshan   | Lakhan     |
+| Alia      | Bhatt    | Lakhan     |
+| Deepika   | Padukone | Lakhan     |
+| Ranbir    | Kapoor   | Lakhan     |
+| Kangana   | Ranaut   | Lakhan     |
+| Rajkummar | Rao      | Lakhan     |
+| Amitabh   | Bachchan | Preeti     |
+| Shah      | Rukh     | Preeti     |
+| Aamir     | Khan     | Preeti     |
+| Akshay    | Kumar    | Preeti     |
+| Hrithik   | Roshan   | Preeti     |
+| Alia      | Bhatt    | Preeti     |
+| Deepika   | Padukone | Preeti     |
+| Ranbir    | Kapoor   | Preeti     |
+| Kangana   | Ranaut   | Preeti     |
+| Rajkummar | Rao      | Preeti     |
+| Amitabh   | Bachchan | Shakuntala |
+| Shah      | Rukh     | Shakuntala |
+| Aamir     | Khan     | Shakuntala |
+| Akshay    | Kumar    | Shakuntala |
+| Hrithik   | Roshan   | Shakuntala |
+| Alia      | Bhatt    | Shakuntala |
+| Deepika   | Padukone | Shakuntala |
+| Ranbir    | Kapoor   | Shakuntala |
+| Kangana   | Ranaut   | Shakuntala |
+| Rajkummar | Rao      | Shakuntala |
+| Amitabh   | Bachchan | Captain    |
+| Shah      | Rukh     | Captain    |
+| Aamir     | Khan     | Captain    |
+| Akshay    | Kumar    | Captain    |
+| Hrithik   | Roshan   | Captain    |
+| Alia      | Bhatt    | Captain    |
+| Deepika   | Padukone | Captain    |
+| Ranbir    | Kapoor   | Captain    |
+| Kangana   | Ranaut   | Captain    |
+| Rajkummar | Rao      | Captain    |
+| Amitabh   | Bachchan | Gauri      |
+| Shah      | Rukh     | Gauri      |
+| Aamir     | Khan     | Gauri      |
+| Akshay    | Kumar    | Gauri      |
+| Hrithik   | Roshan   | Gauri      |
+| Alia      | Bhatt    | Gauri      |
+| Deepika   | Padukone | Gauri      |
+| Ranbir    | Kapoor   | Gauri      |
+| Kangana   | Ranaut   | Gauri      |
+| Rajkummar | Rao      | Gauri      |
++-----------+----------+------------+
+120 rows in set (0.00 sec)
+
+mysql> SELECT m.*, d.*
+    -> FROM Movie m
+    -> LEFT JOIN Direct dr ON m.m_id = dr.m_id
+    -> LEFT JOIN Director d ON dr.d_id = d.d_id
+    -> WHERE YEAR(m.release_date) IN (2018, 2019);
++------+-------------+--------------+------+----------+------+--------+--------+--------+
+| m_id | title       | release_date | rank | budget   | d_id | fname  | lname  | gender |
++------+-------------+--------------+------+----------+------+--------+--------+--------+
+|    5 | War         | 2019-10-02   | A    | 60000000 |    2 | Karan  | Johar  | M      |
+|    8 | Kabir Singh | 2019-06-21   | B    | 30000000 |    5 | Meghna | Gulzar | F      |
++------+-------------+--------------+------+----------+------+--------+--------+--------+
+2 rows in set (0.01 sec)
+
+mysql> SELECT *
+    -> FROM Actor a
+    -> WHERE a.a_id NOT IN (
+    ->     SELECT c.a_id
+    ->     FROM Cast c
+    ->     JOIN Movie m ON m.m_id = c.m_id
+    ->     WHERE m.title = 'Dangal'
+    -> );
++------+-----------+----------+--------+
+| a_id | f_name    | l_name   | salary |
++------+-----------+----------+--------+
+|    1 | Amitabh   | Bachchan | 900000 |
+|    2 | Shah      | Rukh     | 800000 |
+|    4 | Akshay    | Kumar    | 750000 |
+|    5 | Hrithik   | Roshan   | 650000 |
+|    7 | Deepika   | Padukone | 950000 |
+|    8 | Ranbir    | Kapoor   | 400000 |
+|    9 | Kangana   | Ranaut   | 500000 |
+|   10 | Rajkummar | Rao      | 300000 |
++------+-----------+----------+--------+
+8 rows in set (0.00 sec)
+
+mysql> -- Part 1: Movies not starring Amitabh Bachchan
+mysql> SELECT m.*
+    -> FROM Movie m
+    -> WHERE m.m_id NOT IN (
+    ->     SELECT c.m_id
+    ->     FROM Cast c
+    ->     JOIN Actor a ON a.a_id = c.a_id
+    ->     WHERE a.f_name = 'Amitabh' AND a.l_name = 'Bachchan'
+    -> )
+    -> 
+    -> UNION
+    -> 
+    -> -- Part 2: Actors not casted in Shakuntala Devi
+    -> SELECT *
+    -> FROM Actor a
+    -> WHERE a.a_id NOT IN (
+    ->     SELECT c.a_id
+    ->     FROM Cast c
+    ->     JOIN Movie m ON m.m_id = c.m_id
+    ->     WHERE m.title = 'Shakuntala Devi'
+    -> );
+ERROR 1222 (21000): The used SELECT statements have a different number of columns
+mysql> -- Part 1: Movies not starring Amitabh Bachchan
+mysql> SELECT m.*
+    -> FROM Movie m
+    -> WHERE m.m_id NOT IN (
+    ->     SELECT c.m_id
+    ->     FROM Cast c
+    ->     JOIN Actor a ON a.a_id = c.a_id
+    ->     WHERE a.f_name = 'Amitabh' AND a.l_name = 'Bachchan'
+    -> );
++------+-----------------+--------------+------+----------+
+| m_id | title           | release_date | rank | budget   |
++------+-----------------+--------------+------+----------+
+|    2 | K3G             | 2001-12-14   | A    | 30000000 |
+|    3 | PK              | 2014-12-19   | B    | 25000000 |
+|    4 | Dangal          | 2016-12-23   | A    | 70000000 |
+|    5 | War             | 2019-10-02   | A    | 60000000 |
+|    6 | Airlift         | 2016-01-22   | B    | 40000000 |
+|    7 | Ram-Lakhan      | 1989-01-27   | C    | 15000000 |
+|    8 | Kabir Singh     | 2019-06-21   | B    | 30000000 |
+|    9 | Shakuntala Devi | 2020-07-31   | B    | 35000000 |
++------+-----------------+--------------+------+----------+
+8 rows in set (0.00 sec)
+
+mysql> 
+mysql> -- Part 2: Actors not casted in Shakuntala Devi
+mysql> SELECT *
+    -> FROM Actor a
+    -> WHERE a.a_id NOT IN (
+    ->     SELECT c.a_id
+    ->     FROM Cast c
+    ->     JOIN Movie m ON m.m_id = c.m_id
+    ->     WHERE m.title = 'Shakuntala Devi'
+    -> );
++------+-----------+----------+--------+
+| a_id | f_name    | l_name   | salary |
++------+-----------+----------+--------+
+|    1 | Amitabh   | Bachchan | 900000 |
+|    2 | Shah      | Rukh     | 800000 |
+|    3 | Aamir     | Khan     | 850000 |
+|    4 | Akshay    | Kumar    | 750000 |
+|    5 | Hrithik   | Roshan   | 650000 |
+|    6 | Alia      | Bhatt    | 200000 |
+|    7 | Deepika   | Padukone | 950000 |
+|    8 | Ranbir    | Kapoor   | 400000 |
+|   10 | Rajkummar | Rao      | 300000 |
++------+-----------+----------+--------+
+9 rows in set (0.01 sec)
+

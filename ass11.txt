@@ -1,0 +1,316 @@
+
+
+> use store
+switched to db store
+> db.sales.insertMany([
+...   { item: "apple", price: 10, quantity: 2, date: new Date("2025-10-01") },
+...   { item: "banana", price: 5, quantity: 5, date: new Date("2025-10-02") },
+...   { item: "apple", price: 10, quantity: 3, date: new Date("2025-10-03") },
+...   { item: "orange", price: 7, quantity: 4, date: new Date("2025-10-03") },
+...   { item: "banana", price: 5, quantity: 2, date: new Date("2025-10-04") }
+... ])
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("68e3451ba69532004ad3aa72"),
+		ObjectId("68e3451ba69532004ad3aa73"),
+		ObjectId("68e3451ba69532004ad3aa74"),
+		ObjectId("68e3451ba69532004ad3aa75"),
+		ObjectId("68e3451ba69532004ad3aa76")
+	]
+}
+> var mapFunction = function() {
+...   emit(this.item, this.quantity);
+... }
+> var reduceFunction = function(key, values) {
+...   return Array.sum(values);
+... }
+> db.sales.mapReduce(
+...   mapFunction,
+...   reduceFunction,
+...   { out: "total_quantity_per_item" }
+... )
+{
+	"result" : "total_quantity_per_item",
+	"timeMillis" : 509,
+	"counts" : {
+		"input" : 5,
+		"emit" : 5,
+		"reduce" : 2,
+		"output" : 3
+	},
+	"ok" : 1
+}
+> db.total_quantity_per_item.find().pretty()
+{ "_id" : "apple", "value" : 5 }
+{ "_id" : "banana", "value" : 7 }
+{ "_id" : "orange", "value" : 4 }
+> var finalizeFunction = function(key, reducedValue) {
+...   return "Total quantity sold: " + reducedValue;
+... }
+> 
+> db.sales.mapReduce(
+...   mapFunction,
+...   reduceFunction,
+...   {
+...     out: "final_quantity_per_item",
+...     finalize: finalizeFunction
+...   }
+... )
+{
+	"result" : "final_quantity_per_item",
+	"timeMillis" : 285,
+	"counts" : {
+		"input" : 5,
+
+> use store
+switched to db store
+> db.sales.insertMany([
+...   { item: "apple", price: 10, quantity: 2, date: new Date("2025-10-01") },
+...   { item: "banana", price: 5, quantity: 5, date: new Date("2025-10-02") },
+...   { item: "apple", price: 10, quantity: 3, date: new Date("2025-10-03") },
+...   { item: "orange", price: 7, quantity: 4, date: new Date("2025-10-03") },
+...   { item: "banana", price: 5, quantity: 2, date: new Date("2025-10-04") }
+... ])
+{
+	"acknowledged" : true,
+
+> use store
+switched to db store
+> db.sales.insertMany([
+...   { item: "apple", price: 10, quantity: 2, date: new Date("2025-10-01") },
+...   { item: "banana", price: 5, quantity: 5, date: new Date("2025-10-02") },
+...   { item: "apple", price: 10, quantity: 3, date: new Date("2025-10-03") },
+...   { item: "orange", price: 7, quantity: 4, date: new Date("2025-10-03") },
+...   { item: "banana", price: 5, quantity: 2, date: new Date("2025-10-04") }
+... ])
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("68e3451ba69532004ad3aa72"),
+		ObjectId("68e3451ba69532004ad3aa73"),
+		ObjectId("68e3451ba69532004ad3aa74"),
+		ObjectId("68e3451ba69532004ad3aa75"),
+		ObjectId("68e3451ba69532004ad3aa76")
+	]
+}
+> var mapFunction = function() {
+...   emit(this.item, this.quantity);
+... }
+> var reduceFunction = function(key, values) {
+...   return Array.sum(values);
+... }
+> db.sales.mapReduce(
+...   mapFunction,
+...   reduceFunction,
+...   { out: "total_quantity_per_item" }
+... )
+{
+	"result" : "total_quantity_per_item",
+	"timeMillis" : 509,
+	"counts" : {
+		"input" : 5,
+		"emit" : 5,
+		"reduce" : 2,
+		"output" : 3
+	},
+	"ok" : 1
+}
+> db.total_quantity_per_item.find().pretty()
+{ "_id" : "apple", "value" : 5 }
+{ "_id" : "banana", "value" : 7 }
+{ "_id" : "orange", "value" : 4 }
+> var finalizeFunction = function(key, reducedValue) {
+...   return "Total quantity sold: " + reducedValue;
+... }
+> 
+> db.sales.mapReduce(
+...   mapFunction,
+...   reduceFunction,
+...   {
+...     out: "final_quantity_per_item",
+...     finalize: finalizeFunction
+...   }
+... )
+{
+	"result" : "final_quantity_per_item",
+	"timeMillis" : 285,
+	"counts" : {
+		"input" : 5,
+		"emit" : 5,
+		"reduce" : 2,
+		"output" : 3
+	},
+	"ok" : 1
+}
+> db.final_quantity_per_item.find().pretty()
+{ "_id" : "apple", "value" : "Total quantity sold: 5" }
+{ "_id" : "banana", "value" : "Total quantity sold: 7" }
+{ "_id" : "orange", "value" : "Total quantity sold: 4" }
+> db.sales.countDocuments()
+2025-10-06T09:57:34.616+0530 E QUERY    [thread1] TypeError: db.sales.countDocuments is not a function :
+@(shell):1:1
+> db.sales.find({ item: "apple" })
+{ "_id" : ObjectId("68e3451ba69532004ad3aa72"), "item" : "apple", "price" : 10, "quantity" : 2, "date" : ISODate("2025-10-01T00:00:00Z") }
+{ "_id" : ObjectId("68e3451ba69532004ad3aa74"), "item" : "apple", "price" : 10, "quantity" : 3, "date" : ISODate("2025-10-03T00:00:00Z") }
+> db.sales.createIndex({ item: 1 })
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+> db.sales.dropIndex("item_1")
+{ "nIndexesWas" : 2, "ok" : 1 }
+> db.sales.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "store.sales"
+	}
+]
+> db.sales.deleteMany({})
+{ "acknowledged" : true, "deletedCount" : 5 }
+> db.sales.drop()
+true
+> 
+
+	"insertedIds" : [
+		ObjectId("68e3451ba69532004ad3aa72"),
+		ObjectId("68e3451ba69532004ad3aa73"),
+		ObjectId("68e3451ba69532004ad3aa74"),
+		ObjectId("68e3451ba69532004ad3aa75"),
+		ObjectId("68e3451ba69532004ad3aa76")
+	]
+}
+> var mapFunction = function() {
+...   emit(this.item, this.quantity);
+... }
+> var reduceFunction = function(key, values) {
+...   return Array.sum(values);
+... }
+> db.sales.mapReduce(
+...   mapFunction,
+...   reduceFunction,
+...   { out: "total_quantity_per_item" }
+... )
+{
+	"result" : "total_quantity_per_item",
+	"timeMillis" : 509,
+	"counts" : {
+		"input" : 5,
+		"emit" : 5,
+		"reduce" : 2,
+		"output" : 3
+	},
+	"ok" : 1
+}
+> db.total_quantity_per_item.find().pretty()
+{ "_id" : "apple", "value" : 5 }
+{ "_id" : "banana", "value" : 7 }
+{ "_id" : "orange", "value" : 4 }
+> var finalizeFunction = function(key, reducedValue) {
+...   return "Total quantity sold: " + reducedValue;
+... }
+> 
+> db.sales.mapReduce(
+...   mapFunction,
+...   reduceFunction,
+...   {
+...     out: "final_quantity_per_item",
+...     finalize: finalizeFunction
+...   }
+... )
+{
+	"result" : "final_quantity_per_item",
+	"timeMillis" : 285,
+	"counts" : {
+		"input" : 5,
+		"emit" : 5,
+		"reduce" : 2,
+		"output" : 3
+	},
+	"ok" : 1
+}
+> db.final_quantity_per_item.find().pretty()
+{ "_id" : "apple", "value" : "Total quantity sold: 5" }
+{ "_id" : "banana", "value" : "Total quantity sold: 7" }
+{ "_id" : "orange", "value" : "Total quantity sold: 4" }
+> db.sales.countDocuments()
+2025-10-06T09:57:34.616+0530 E QUERY    [thread1] TypeError: db.sales.countDocuments is not a function :
+@(shell):1:1
+> db.sales.find({ item: "apple" })
+{ "_id" : ObjectId("68e3451ba69532004ad3aa72"), "item" : "apple", "price" : 10, "quantity" : 2, "date" : ISODate("2025-10-01T00:00:00Z") }
+{ "_id" : ObjectId("68e3451ba69532004ad3aa74"), "item" : "apple", "price" : 10, "quantity" : 3, "date" : ISODate("2025-10-03T00:00:00Z") }
+> db.sales.createIndex({ item: 1 })
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+> db.sales.dropIndex("item_1")
+{ "nIndexesWas" : 2, "ok" : 1 }
+> db.sales.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "store.sales"
+	}
+]
+> db.sales.deleteMany({})
+{ "acknowledged" : true, "deletedCount" : 5 }
+> db.sales.drop()
+true
+> 
+
+		"emit" : 5,
+		"reduce" : 2,
+		"output" : 3
+	},
+	"ok" : 1
+}
+> db.final_quantity_per_item.find().pretty()
+{ "_id" : "apple", "value" : "Total quantity sold: 5" }
+{ "_id" : "banana", "value" : "Total quantity sold: 7" }
+{ "_id" : "orange", "value" : "Total quantity sold: 4" }
+> db.sales.countDocuments()
+2025-10-06T09:57:34.616+0530 E QUERY    [thread1] TypeError: db.sales.countDocuments is not a function :
+@(shell):1:1
+> db.sales.find({ item: "apple" })
+{ "_id" : ObjectId("68e3451ba69532004ad3aa72"), "item" : "apple", "price" : 10, "quantity" : 2, "date" : ISODate("2025-10-01T00:00:00Z") }
+{ "_id" : ObjectId("68e3451ba69532004ad3aa74"), "item" : "apple", "price" : 10, "quantity" : 3, "date" : ISODate("2025-10-03T00:00:00Z") }
+> db.sales.createIndex({ item: 1 })
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+> db.sales.dropIndex("item_1")
+{ "nIndexesWas" : 2, "ok" : 1 }
+> db.sales.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "store.sales"
+	}
+]
+> db.sales.deleteMany({})
+{ "acknowledged" : true, "deletedCount" : 5 }
+> db.sales.drop()
+true
+> 
+
